@@ -38,23 +38,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #include "SmartPointers.hpp"
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkVersion.h>
-#if VTK_MAJOR_VERSION > 5
-    #include <vtkOggTheoraWriter.h>
-    #if VTK_MINOR_VERSION > 0
-        #include <vtkAutoInit.h>
-        #if VTK_MAJOR_VERSION > 6
-        VTK_MODULE_INIT(vtkRenderingOpenGL2);
-        #else
-        VTK_MODULE_INIT(vtkRenderingOpenGL);
-        #endif
-        VTK_MODULE_INIT(vtkRenderingFreeType);
-    #else
-        #define vtkRenderingCore_AUTOINIT 4(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingFreeTypeOpenGL,vtkRenderingOpenGL)
-        #define vtkRenderingVolume_AUTOINIT 1(vtkRenderingVolumeOpenGL)
-    #endif
-#endif
+#include <vtkOggTheoraWriter.h>
+#include <vtkAutoInit.h>
+VTK_MODULE_INIT(vtkRenderingOpenGL2);
+VTK_MODULE_INIT(vtkRenderingFreeType);
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
@@ -92,12 +80,10 @@ class VtkScene
      */
     std::string mOutputFilePath;
 
-    #if VTK_MAJOR_VERSION > 5
     /**
      * The animation writer
      */
     vtkSmartPointer<vtkOggTheoraWriter> mAnimationWriter;
-    #endif
 
     /**
      * The image to window filter
