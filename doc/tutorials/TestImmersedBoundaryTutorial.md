@@ -8,7 +8,7 @@ toc: true
 layout: "single"
 ---
 
-This tutorial is automatically generated from [TestImmersedBoundaryTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestImmersedBoundaryTutorial.py) at revision [5e0d0a44](https://github.com/Chaste/PyChaste/commit/5e0d0a44af4a3ba6db0eb8a89f7a538f4c6d6656).
+This tutorial is automatically generated from [TestImmersedBoundaryTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestImmersedBoundaryTutorial.py) at revision [d548c83d](https://github.com/Chaste/PyChaste/commit/d548c83ded45c0fcaad7ad93106b73e46df81971).
 Note that the code is given in full at the bottom of the page.
 
 
@@ -111,6 +111,8 @@ Next, we set up the cell population
         cell_generator = CellsGeneratorUniformCellCycleModel_2()
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
 
+```
+```python
         # Set up the cell population
         cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
 

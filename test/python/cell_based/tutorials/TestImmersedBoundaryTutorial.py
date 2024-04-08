@@ -64,14 +64,18 @@ from chaste.cell_based import (
     ImmersedBoundaryLinearMembraneForce2,
     ImmersedBoundarySimulationModifier2,
     OffLatticeSimulation2_2,
+    SetupNotebookTest,
     SimulationTime,
     TearDownNotebookTest,
 )
 
 from chaste.mesh import FluidSource2, ImmersedBoundaryPalisadeMeshGenerator
 
-from chaste.visualization import JupyterNotebookManager, VtkScene2
-
+from chaste.visualization import (
+    JupyterNotebookManager,
+    JupyterSceneModifier2,
+    VtkScene2
+)
 
 class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
@@ -90,6 +94,9 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
     ## **Tip** Make sure all your coordinates are between `0` and `1`.
 
     def test_simple_immersed_boundary_simulation(self):
+        # Setup the notebook environment for the simulation
+        SetupNotebookTest()
+
         # Set the start time for the simulation
         SimulationTime.Instance().SetStartTime(0.0)
 
@@ -146,7 +153,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         scene = VtkScene2()
         scene.SetCellPopulation(cell_population)
         nb_manager = JupyterNotebookManager()
-        nb_manager.vtk_show(scene, height=600)
+        nb_manager.vtk_show(scene, height=300)
 
         ## Here, we use an `OffLatticeSimulation` simulator to control the
         ## simulation. Although the fluid is simulated on a lattice (grid),
@@ -188,7 +195,13 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         ## proportional to the deviation of the distance between nodes
         ## from a rest length.
 
-        ## Finally, we set up the simulation properties and run it.
+        # Add a modifier to visualize the simulation progress
+        scene_modifier = JupyterSceneModifier2(nb_manager)
+        scene_modifier.SetVtkScene(scene)
+        scene_modifier.SetUpdateFrequency(100)
+        simulator.AddSimulationModifier(scene_modifier)
+
+        ## Finally, we set the simulation properties and run it.
 
         # Set simulation properties
         dt = 0.05
@@ -196,24 +209,33 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
         simulator.SetEndTime(1000 * dt)
+        
+        ## To run the simulation, we call the `Solve()` method. We can also 
+        ## start and end the scene to visualize the simulation progress.
 
         # Perform the simulation
+        scene.Start()
         simulator.Solve()
+        scene.End()
 
-        SimulationTime.Instance().Destroy()
+        # Clear the notebook environment
         TearDownNotebookTest()
 
     ## ### 2. Adding More Cells
 
     def test_multicell_immersed_boundary_simulation(self):
         ## #### Multiple Cells
+
+        # Setup the notebook environment for the simulation
+        SetupNotebookTest()
+
         ## We can use the mesh generator to generate multiple cells. The first
         ## parameter of the mesh generator constructor controls the number of
         ## cells. Try increasing the number of cells by adjusting the parameter
         ## value. A sensible range for this tutorial is 4-10 cells.
 
         # Create a mesh generator
-        gen = ImmersedBoundaryPalisadeMeshGenerator(1, 128, 0.1, 2.0, 0.0, False)
+        gen = ImmersedBoundaryPalisadeMeshGenerator(5, 128, 0.1, 2.0, 0.0, False)
 
         ## #### Laminas
         ## In addition to the cells we have seen so far, we can introduce
@@ -250,6 +272,12 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         # Specify whether the population has active fluid sources
         cell_population.SetIfPopulationHasActiveSources(False)
+
+        # Visualize the cell population
+        scene = VtkScene2()
+        scene.SetCellPopulation(cell_population)
+        nb_manager = JupyterNotebookManager()
+        nb_manager.vtk_show(scene, height=300)
 
         # Create a simulator to manage our simulation
         simulator = OffLatticeSimulation2_2(cell_population)
@@ -289,7 +317,10 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         # Perform the simulation
         simulator.Solve()
 
-        SimulationTime.Instance().Destroy()
+        # Visualize the end state
+        nb_manager.vtk_show(scene, height=300)
+
+        # Clear the notebook environment
         TearDownNotebookTest()
 
     ## ### 3. Adding Fluid Sources
@@ -299,6 +330,10 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
     def test_fluid_source_immersed_boundary_simulation(self):
 
         ## #### Adding a Fluid Source
+
+        # Setup the notebook environment for the simulation
+        SetupNotebookTest()
+
         ## We begin by constructing a fluid source object.
 
         source = FluidSource2(0, 0.5, 0.7)
@@ -335,6 +370,12 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         # Specify that fluid sources are present
         cell_population.SetIfPopulationHasActiveSources(True)
+
+        # Visualize the cell population
+        scene = VtkScene2()
+        scene.SetCellPopulation(cell_population)
+        nb_manager = JupyterNotebookManager()
+        nb_manager.vtk_show(scene, height=300)
 
         ## #### Varying the Source Location
         ## You can experiment with the source location. Try moving it closer to
@@ -382,7 +423,10 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         # Perform the simulation
         simulator.Solve()
 
-        SimulationTime.Instance().Destroy()
+        # Visualize the end state
+        nb_manager.vtk_show(scene, height=300)
+        
+        # Clear the notebook environment
         TearDownNotebookTest()
 
         ## #### Further Exercises
