@@ -70,7 +70,7 @@ from chaste.cell_based import (
 
 from chaste.mesh import FluidSource2, ImmersedBoundaryPalisadeMeshGenerator
 
-import chaste.visualization
+from chaste.visualization import JupyterNotebookManager, VtkScene2
 
 
 class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
@@ -117,12 +117,14 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         # Set the fluid grid resolution
         mesh.SetNumGridPtsXAndY(64)
 
-        ## Next, we set up the cell population
+        ## Next, we generate the cells
 
         # Generate the cells
         cell_type = DifferentiatedCellProliferativeType()
         cell_generator = CellsGeneratorUniformCellCycleModel_2()
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
+
+        ## Then we set up the cell population
 
         # Set up the cell population
         cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
@@ -137,6 +139,14 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         # Specify whether the population has active fluid sources
         cell_population.SetIfPopulationHasActiveSources(False)
+
+        ## We can set up a `VtkScene` to do a quick visualization of the
+        ## population before running the simulation.
+
+        scene = VtkScene2()
+        scene.SetCellPopulation(cell_population)
+        nb_manager = JupyterNotebookManager()
+        nb_manager.vtk_show(scene, height=600)
 
         ## Here, we use an `OffLatticeSimulation` simulator to control the
         ## simulation. Although the fluid is simulated on a lattice (grid),
