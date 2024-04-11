@@ -6,6 +6,11 @@ on:
     branches:
       - '**'
 
+# Limit concurrent deployments to one per branch
+concurrency:
+  group: build-and-test-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   
   build-and-test:
@@ -19,7 +24,7 @@ jobs:
       
     steps:
     - name: checkout Chaste repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Chaste/Chaste
         ref: develop
@@ -27,7 +32,7 @@ jobs:
         submodules: recursive
 
     - name: checkout PyChaste repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: Chaste/projects/PyChaste
         submodules: recursive
@@ -94,11 +99,11 @@ jobs:
       working-directory: Chaste/build
 
     - name: build project_PyChaste
-      run: cmake --build . --parallel 2 --target project_PyChaste
+      run: cmake --build . --parallel $(nproc) --target project_PyChaste
       working-directory: Chaste/build
 
     - name: build project_PyChaste_Python
-      run: cmake --build . --parallel 2 --target project_PyChaste_Python
+      run: cmake --build . --parallel $(nproc) --target project_PyChaste_Python
       working-directory: Chaste/build
 
     - name: install PyChaste
@@ -106,5 +111,5 @@ jobs:
       working-directory: Chaste/build/projects/PyChaste/python
 
     - name: run tests
-      run: xvfb-run --server-args="-screen 0 1024x768x24" ctest -j2 -L PyChaste --output-on-failure
+      run: xvfb-run --server-args="-screen 0 1024x768x24" ctest -j $(nproc) -L PyChaste --output-on-failure
       working-directory: Chaste/build

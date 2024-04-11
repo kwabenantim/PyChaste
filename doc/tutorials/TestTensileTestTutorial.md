@@ -1,14 +1,18 @@
+
 ---
-layout: page-full-width 
-title: Test Tensile Test Tutorial
+title : "Test Tensile Test Tutorial"
+summary: ""
+draft: false
+images: []
+toc: true
+layout: "single"
 ---
-This tutorial is automatically generated from the file test/python/cell_based/tutorials/TestTensileTestTutorial.py.
-[Go to the Jupyter Notebook version.]({{ site.baseurl}}/documentation/md_tutorials/TestTensileTestTutorial_nb.html)
+
+This tutorial is automatically generated from [TestTensileTestTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestTensileTestTutorial.py) at revision [f810861a](https://github.com/Chaste/PyChaste/commit/f810861afe376ba19bd791e14e85f29583993205).
 Note that the code is given in full at the bottom of the page.
 
 
-
-# Introduction
+## Introduction
 In this tutorial we will demonstrate a simulated tensile test on an epithelial sheet. This test
 demonstrates:
  * Working with vertex based off lattice populations
@@ -29,7 +33,7 @@ chaste.init()  # Set up MPI
 class TestTensileTestTutorial(chaste.cell_based.AbstractCellBasedTestSuite):
 
 ```
-## Test 1 - A 2d test
+### Test 1 - A 2D test
 
 ```python
     def test_monolayer(self):
@@ -49,8 +53,7 @@ Now set up the cells, again we want to avoid proliferation.
 ```python
         differentiated_type = chaste.cell_based.DifferentiatedCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformG1GenerationalCellCycleModel_2()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(),
-                                                   differentiated_type)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), differentiated_type)
 
 ```
 Next, create the cell population
@@ -96,9 +99,7 @@ fixing lateral degress of freedom for simplicity, since we are using an over-dam
         simulator.AddCellPopulationBoundaryCondition(bc)
         point = np.array([0.0, 15.5])
         normal = np.array([0.0, -1.0])
-        bc2 = chaste.cell_based.AttractingPlaneBoundaryCondition2_2(cell_population,
-                                                                    point,
-                                                                    normal)
+        bc2 = chaste.cell_based.AttractingPlaneBoundaryCondition2_2(cell_population, point, normal)
         simulator.AddCellPopulationBoundaryCondition(bc2)
 
 ```
@@ -167,11 +168,10 @@ if __name__ == '__main__':
 ```
 
 
-# Code 
-The full code is given below
+## Full code 
 
 
-## File name `TestTensileTestTutorial.py` 
+**File name:** `TestTensileTestTutorial.py` 
 
 ```python
 import unittest  # Python testing framework
@@ -193,8 +193,7 @@ class TestTensileTestTutorial(chaste.cell_based.AbstractCellBasedTestSuite):
 
         differentiated_type = chaste.cell_based.DifferentiatedCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformG1GenerationalCellCycleModel_2()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(),
-                                                   differentiated_type)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), differentiated_type)
 
         cell_population = chaste.cell_based.VertexBasedCellPopulation2(mesh,
                                                                        cells)
@@ -216,9 +215,7 @@ class TestTensileTestTutorial(chaste.cell_based.AbstractCellBasedTestSuite):
         simulator.AddCellPopulationBoundaryCondition(bc)
         point = np.array([0.0, 15.5])
         normal = np.array([0.0, -1.0])
-        bc2 = chaste.cell_based.AttractingPlaneBoundaryCondition2_2(cell_population,
-                                                                    point,
-                                                                    normal)
+        bc2 = chaste.cell_based.AttractingPlaneBoundaryCondition2_2(cell_population, point, normal)
         simulator.AddCellPopulationBoundaryCondition(bc2)
 
         class BoundaryConditionModifier(chaste.cell_based.PythonSimulationModifier2):

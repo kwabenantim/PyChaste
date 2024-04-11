@@ -1,0 +1,35 @@
+name: test-conda
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "19 04 * * 6"
+
+jobs:
+  test-conda:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+
+      - name: setup conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          use-mamba: true
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          python-version: "3.10"
+          activate-environment: pychaste_test
+          channels: pychaste,conda-forge,bioconda
+
+      - name: install pychaste
+        run: mamba install -n pychaste_test -y chaste
+
+      - name: test imports
+        run: |
+          python3 -c "import chaste; chaste.init(); import chaste.ode; import chaste.pde; import chaste.mesh; import chaste.cell_based;"
+        shell: bash -el {0}

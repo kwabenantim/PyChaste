@@ -1,21 +1,26 @@
+
 ---
-layout: page-full-width 
-title: Test Spheroid Tutorial
+title : "Test Spheroid Tutorial"
+summary: ""
+draft: false
+images: []
+toc: true
+layout: "single"
 ---
-This tutorial is automatically generated from the file test/python/cell_based/tutorials/TestSpheroidTutorial.py.
-[Go to the Jupyter Notebook version.]({{ site.baseurl}}/documentation/md_tutorials/TestSpheroidTutorial_nb.html)
+
+This tutorial is automatically generated from [TestSpheroidTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestSpheroidTutorial.py) at revision [f810861a](https://github.com/Chaste/PyChaste/commit/f810861afe376ba19bd791e14e85f29583993205).
 Note that the code is given in full at the bottom of the page.
 
 
-
-# Introduction
+## Introduction
 This tutorial is an example of modelling spheroid growth with a nutrient.
 It covers:
  * Setting up an off-lattice cell population
  * Setting up a cell cycle model with oxygen dependence
  * Setting up and solving an oxygen transport PDE
  * Setting up a cell killer
- ## Imports and Setup
+ 
+## The Test
 
 ```python
 import unittest # Python testing framework
@@ -31,7 +36,7 @@ chaste.init() # Set up MPI
 class TestSpheroidTutorial(chaste.cell_based.AbstractCellBasedTestSuite):
 
 ```
-## Test 1 - a 2D mesh-based spheroid
+### Test 1 - a 2D mesh-based spheroid
 In this test we set up a spheroid with a plentiful supply of oxygen on the boundary and watch it grow
 over time. Cells can gradually become apoptotic if the oxygen tension is too low.
 
@@ -179,11 +184,10 @@ if __name__ == '__main__':
 ```
 
 
-# Code 
-The full code is given below
+## Full code 
 
 
-## File name `TestSpheroidTutorial.py` 
+**File name:** `TestSpheroidTutorial.py` 
 
 ```python
 import unittest # Python testing framework

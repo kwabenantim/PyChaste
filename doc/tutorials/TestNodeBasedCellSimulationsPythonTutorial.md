@@ -1,14 +1,18 @@
+
 ---
-layout: page-full-width 
-title: Test Node Based Cell Simulations Python Tutorial
+title : "Test Node Based Cell Simulations Python Tutorial"
+summary: ""
+draft: false
+images: []
+toc: true
+layout: "single"
 ---
-This tutorial is automatically generated from the file test/python/cell_based/tutorials/TestNodeBasedCellSimulationsPythonTutorial.py.
-[Go to the Jupyter Notebook version.]({{ site.baseurl}}/documentation/md_tutorials/TestNodeBasedCellSimulationsPythonTutorial_nb.html)
+
+This tutorial is automatically generated from [TestNodeBasedCellSimulationsPythonTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestNodeBasedCellSimulationsPythonTutorial.py) at revision [f810861a](https://github.com/Chaste/PyChaste/commit/f810861afe376ba19bd791e14e85f29583993205).
 Note that the code is given in full at the bottom of the page.
 
 
-
-# Introduction
+## Introduction
 In this tutorial we show how Chaste can be used to create, run and visualize node-based simulations. Full details of the mechanical model can be found in Pathamathan et
 al "A computational study of discrete mechanical tissue models", Physical Biology. Vol. 6. No. 3. 2009.. DOI (10.1088/1478-3975/6/3/036001).
 
@@ -25,7 +29,7 @@ chaste.init()  # Set up MPI
 
 class TestRunningNodeBasedSimulationsTutorial(chaste.cell_based.AbstractCellBasedTestSuite):
 ```
-## Test 1 - A basic node-based simulation
+### Test 1 - A basic node-based simulation
 In the first test, we run a simple node-based simulation, in which we create a monolayer of cells,
 using a nodes only mesh. Each cell is assigned a uniform cell-cycle model.
 
@@ -68,8 +72,7 @@ the third argument specifies the proliferative type of the cell.
 ```python
         transit_type = chaste.cell_based.TransitCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformCellCycleModel_2()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(),
-                                                   transit_type)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(), transit_type)
 
 ```
 Now we have a mesh and a set of cells to go with it, we can create a `CellPopulation`.
@@ -77,8 +80,7 @@ In general, this class associates a collection of cells with a mesh. For this te
 because we have a `NodesOnlyMesh`, we use a particular type of cell population called a `NodeBasedCellPopulation`.
 
 ```python
-        cell_population = chaste.cell_based.NodeBasedCellPopulation2(mesh,
-                                                                     cells)
+        cell_population = chaste.cell_based.NodeBasedCellPopulation2(mesh, cells)
 
 ```
 We can set up a `VtkScene` to do a quick visualization of the population before running the analysis.
@@ -133,7 +135,7 @@ If different simulation input parameters are being explored the lines should be 
         # JUPYTER_TEARDOWN
 
 ```
-## Test 2 - a basic node-based simulation in 3D
+### Test 2 - a basic node-based simulation in 3D
 In the second test we run a simple node-based simulation in 3D. This is very similar to the 2D test with the dimension changed from 2 to 3 and
 instead of using a mesh generator we generate the nodes directly.
 
@@ -173,8 +175,7 @@ As before, we do this with the CellsGenerator helper class (this time with dimen
 ```python
         transit_type = chaste.cell_based.TransitCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformCellCycleModel_3()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(),
-                                                   transit_type)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(), transit_type)
 
 ```
 Now we have a mesh and a set of cells to go with it, we can create a `CellPopulation`.
@@ -182,8 +183,7 @@ In general, this class associates a collection of cells with a mesh. For this te
 because we have a `NodesOnlyMesh`, we use a particular type of cell population called a `NodeBasedCellPopulation`.
 
 ```python
-        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh,
-                                                                     cells)
+        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh, cells)
 
 ```
 We can set up a `VtkScene` to do a quick visualization of the population before running the analysis.
@@ -232,13 +232,12 @@ If different simulation input parameters are being explored the lines should be 
 
 ```python
         self.assertEqual(cell_population.GetNumRealCells(), 8)
-        self.assertAlmostEqual(chaste.cell_based.SimulationTime.Instance().GetTime(),
-                               10.0, 6)
+        self.assertAlmostEqual(chaste.cell_based.SimulationTime.Instance().GetTime(), 10.0, 6)
 
         # JUPYTER_TEARDOWN
 
 ```
-## Test 3 - a node-based simulation on a restricted geometry
+### Test 3 - a node-based simulation on a restricted geometry
 In the second test we run a simple node-based simulation in 3D. This is very similar to the 2D test with the dimension changed from 2 to 3 and
 instead of using a mesh generator we generate the nodes directly.
 
@@ -268,10 +267,8 @@ which defines the connectivity of the nodes by defining a radius of interaction.
 
         transit_type = chaste.cell_based.TransitCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformCellCycleModel_3()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(),
-                                                   transit_type)
-        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh,
-                                                                     cells)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(), transit_type)
+        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh, cells)
 
 ```
 We can set up a `VtkScene` to do a quick visualization of the population before running the analysis.
@@ -305,9 +302,7 @@ First we set the centre (0,0,1) and radius of the sphere (1).
         centre = np.array([0.0, 0.0, 1.0])
         radius = 5.0
         point2 = chaste.mesh.ChastePoint3(centre)
-        boundary_condition = chaste.cell_based.SphereGeometryBoundaryCondition3(cell_population,
-                                                                                point2.rGetLocation(),
-                                                                                radius)
+        boundary_condition = chaste.cell_based.SphereGeometryBoundaryCondition3(cell_population, point2.rGetLocation(), radius)
         simulator.AddCellPopulationBoundaryCondition(boundary_condition)
 
 ```
@@ -343,11 +338,10 @@ if __name__ == '__main__':
 ```
 
 
-# Code 
-The full code is given below
+## Full code 
 
 
-## File name `TestNodeBasedCellSimulationsPythonTutorial.py` 
+**File name:** `TestNodeBasedCellSimulationsPythonTutorial.py` 
 
 ```python
 import unittest  # Python testing framework
@@ -373,11 +367,9 @@ class TestRunningNodeBasedSimulationsTutorial(chaste.cell_based.AbstractCellBase
 
         transit_type = chaste.cell_based.TransitCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformCellCycleModel_2()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(),
-                                                   transit_type)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(), transit_type)
 
-        cell_population = chaste.cell_based.NodeBasedCellPopulation2(mesh,
-                                                                     cells)
+        cell_population = chaste.cell_based.NodeBasedCellPopulation2(mesh, cells)
 
         scene = chaste.visualization.VtkScene2()
         scene.SetCellPopulation(cell_population)
@@ -423,11 +415,9 @@ class TestRunningNodeBasedSimulationsTutorial(chaste.cell_based.AbstractCellBase
 
         transit_type = chaste.cell_based.TransitCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformCellCycleModel_3()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(),
-                                                   transit_type)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(), transit_type)
 
-        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh,
-                                                                     cells)
+        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh, cells)
 
         scene = chaste.visualization.VtkScene3()
         scene.SetCellPopulation(cell_population)
@@ -451,8 +441,7 @@ class TestRunningNodeBasedSimulationsTutorial(chaste.cell_based.AbstractCellBase
         scene.End()
 
         self.assertEqual(cell_population.GetNumRealCells(), 8)
-        self.assertAlmostEqual(chaste.cell_based.SimulationTime.Instance().GetTime(),
-                               10.0, 6)
+        self.assertAlmostEqual(chaste.cell_based.SimulationTime.Instance().GetTime(), 10.0, 6)
 
         # JUPYTER_TEARDOWN
 
@@ -472,10 +461,8 @@ class TestRunningNodeBasedSimulationsTutorial(chaste.cell_based.AbstractCellBase
 
         transit_type = chaste.cell_based.TransitCellProliferativeType()
         cell_generator = chaste.cell_based.CellsGeneratorUniformCellCycleModel_3()
-        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(),
-                                                   transit_type)
-        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh,
-                                                                     cells)
+        cells = cell_generator.GenerateBasicRandom(mesh.GetNumNodes(), transit_type)
+        cell_population = chaste.cell_based.NodeBasedCellPopulation3(mesh, cells)
 
         scene = chaste.visualization.VtkScene3()
         scene.SetCellPopulation(cell_population)
@@ -492,9 +479,7 @@ class TestRunningNodeBasedSimulationsTutorial(chaste.cell_based.AbstractCellBase
         centre = np.array([0.0, 0.0, 1.0])
         radius = 5.0
         point2 = chaste.mesh.ChastePoint3(centre)
-        boundary_condition = chaste.cell_based.SphereGeometryBoundaryCondition3(cell_population,
-                                                                                point2.rGetLocation(),
-                                                                                radius)
+        boundary_condition = chaste.cell_based.SphereGeometryBoundaryCondition3(cell_population, point2.rGetLocation(), radius)
         simulator.AddCellPopulationBoundaryCondition(boundary_condition)
 
         scene_modifier.SetVtkScene(scene)

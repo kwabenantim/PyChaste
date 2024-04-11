@@ -1,18 +1,22 @@
+
 ---
-layout: page-full-width 
-title: Test Mesh Based Cell Simulations Python Tutorial
+title : "Test Mesh Based Cell Simulations Python Tutorial"
+summary: ""
+draft: false
+images: []
+toc: true
+layout: "single"
 ---
-This tutorial is automatically generated from the file test/python/cell_based/tutorials/TestMeshBasedCellSimulationsPythonTutorial.py.
-[Go to the Jupyter Notebook version.]({{ site.baseurl}}/documentation/md_tutorials/TestMeshBasedCellSimulationsPythonTutorial_nb.html)
+
+This tutorial is automatically generated from [TestMeshBasedCellSimulationsPythonTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestMeshBasedCellSimulationsPythonTutorial.py) at revision [f810861a](https://github.com/Chaste/PyChaste/commit/f810861afe376ba19bd791e14e85f29583993205).
 Note that the code is given in full at the bottom of the page.
 
 
-
-# Introduction
+## Introduction
 In this tutorial we show how Chaste can be used to create, run and visualize mesh-based simulations.
 Full details of the mathematical model can be found in van Leeuwen et al. (2009) [doi:10.1111/j.1365-2184.2009.00627.x].
 
-## Imports and Setup
+## The Test
 
 ```python
 import unittest  # Python testing framework
@@ -27,7 +31,7 @@ import chaste.visualization  # Visualization tools
 class TestRunningMeshBasedSimulationsTutorial(chaste.cell_based.AbstractCellBasedTestSuite):
 
 ```
-## Test 1 - a basic mesh-based simulation
+### Test 1 - a basic mesh-based simulation
 In the first test, we run a simple mesh-based simulation,
 in which we create a monolayer of cells, using a mutable mesh. Each cell is assigned a stochastic cell-cycle model.
 
@@ -134,7 +138,7 @@ To run the simulation, we call `Solve()`. We can again do a quick rendering of t
 ```
 Full results can be visualized in Paraview from the `file_handler.GetOutputDirectoryFullPath()` directory.
 
-## Test 2 -  a basic mesh-based simulation with ghost nodes
+### Test 2 -  a basic mesh-based simulation with ghost nodes
 In the second test, we run a simple mesh-based simulation with ghost nodes, in which we create a monolayer of cells, using a mutable mesh.
 Each cell is assigned a stochastic cell-cycle model.
 
@@ -251,11 +255,10 @@ if __name__ == '__main__':
 ```
 
 
-# Code 
-The full code is given below
+## Full code 
 
 
-## File name `TestMeshBasedCellSimulationsPythonTutorial.py` 
+**File name:** `TestMeshBasedCellSimulationsPythonTutorial.py` 
 
 ```python
 import unittest  # Python testing framework

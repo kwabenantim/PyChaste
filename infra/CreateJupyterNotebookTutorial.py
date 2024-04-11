@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-"""Copyright (c) 2005-2023, University of Oxford.
+"""Copyright (c) 2005-2024, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -244,7 +244,6 @@ def ConvertTutorialToJupyterNotebook(test_file_path, test_file, other_files, rev
     """
     if revision:
         revision = ' at revision r' + str(revision)
-        
     nb = nbf.v4.new_notebook()
     nb['cells'] = []
 
@@ -307,7 +306,6 @@ if __name__ == '__main__':
     
     ## Some logging
     print ("Generating:" + out_file_name)
-    
     with open(out_file_name, 'w') as f:
         nbf.write(nb, f)
 
