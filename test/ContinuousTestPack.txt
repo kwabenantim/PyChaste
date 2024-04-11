@@ -14,6 +14,7 @@ python/cell_based/TestCaBasedCellPopulationPython.py
 python/cell_based/TestMeshBasedCellPopulationPython.py
 python/cell_based/TestVertexBasedCellPopulationPython.py
 python/cell_based/TestNodeBasedCellPopulationPython.py
+python/cell_based/tutorials/TestImmersedBoundaryTutorial.py
 python/cell_based/tutorials/TestMeshBasedCellSimulationsPythonTutorial.py
 python/cell_based/tutorials/TestNodeBasedCellSimulationsPythonTutorial.py
 python/cell_based/tutorials/TestPottsBasedCellSimulationsPythonTutorial.py
