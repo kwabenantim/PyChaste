@@ -8,7 +8,7 @@ toc: true
 layout: "single"
 ---
 
-This tutorial is automatically generated from [TestImmersedBoundaryTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestImmersedBoundaryTutorial.py) at revision [a17a4092](https://github.com/Chaste/PyChaste/commit/a17a4092069eaa64fe77e1e5d286ef0595ebc04f).
+This tutorial is automatically generated from [TestImmersedBoundaryTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestImmersedBoundaryTutorial.py) at revision [1f56164c](https://github.com/Chaste/PyChaste/commit/1f56164c1cef48fadacfaf3312c8fc04801e180c).
 Note that the code is given in full at the bottom of the page.
 
 
@@ -407,7 +407,10 @@ Having created the fluid source, we set its strength:
 ```python
         source.SetStrength(0.012)
 
-        # Next, we create the mesh
+```
+Next, we create the mesh
+
+```python
         gen = ImmersedBoundaryPalisadeMeshGenerator(5, 128, 0.1, 2.0, 0.0, False)
         mesh = gen.GetMesh()
         mesh.SetNumGridPtsXAndY(64)
@@ -682,7 +685,6 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         source.SetStrength(0.012)
 
-        # Next, we create the mesh
         gen = ImmersedBoundaryPalisadeMeshGenerator(5, 128, 0.1, 2.0, 0.0, False)
         mesh = gen.GetMesh()
         mesh.SetNumGridPtsXAndY(64)

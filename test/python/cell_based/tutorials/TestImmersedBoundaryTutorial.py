@@ -367,7 +367,8 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         source.SetStrength(0.012)
 
-        # Next, we create the mesh
+        ## Next, we create the mesh
+
         gen = ImmersedBoundaryPalisadeMeshGenerator(5, 128, 0.1, 2.0, 0.0, False)
         mesh = gen.GetMesh()
         mesh.SetNumGridPtsXAndY(64)
