@@ -85,242 +85,256 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
     ## involved in setting up an immersed boundary simulation, and the options
     ## available for controlling how the cells are generated and behave.
     ##
+
     ## Immersed boundary simulations operate over a square domain, with `x` and `y`
     ## coordinates lying in the range `0` to `1`. The domain wraps on both axes -
     ## this means that if a cell moves off the right hand edge of the domain,
     ## the segment will appear on the left hand side. This is not purely visual;
     ## forces are also transmitted across these boundaries.
     ##
+
     ## **Tip** Make sure all your coordinates are between `0` and `1`.
 
     def test_simple_immersed_boundary_simulation(self):
-        # Setup the notebook environment for the simulation
+
+        ## Setup the simulation environment in the notebook
+
         SetupNotebookTest()
 
-        # Set the start time for the simulation
+        ## Set the start time for the simulation
+
         SimulationTime.Instance().SetStartTime(0.0)
 
-        ## **Tip** Lines of code beginning with `#` are comments in Python
-        ##
-        ## Next, we define the necessary geometry.
+        ## Next, we define the necessary geometry by generating a mesh to 
+        ## contain a single cell.
 
-        # Generate a mesh containing a single cell
         gen = ImmersedBoundaryPalisadeMeshGenerator(1, 128, 0.1, 2.0, 0.0, False)
         mesh = gen.GetMesh()
 
         ## The first line of code defines an `ImmersedBoundaryPalisadeMeshGenerator`
-        ## called `gen`. The 3rd and 4th parameters control the exponent of the
-        ## superellipse(`0.1`) and the aspect ratio of the cell(`2.0`). You can
+        ## called `gen`. The 3rd parameter controls the exponent of the superellipse(`0.1`) 
+        ## and the 4th parameter controls the aspect ratio of the cell(`2.0`). You can
         ## experiment with modifying these to change the initial shape of the cell.
         ##
+
         ## The second line of code instructs the mesh generator to generate a mesh.
         ## Checking the type of mesh with `type(mesh)` will show it as
         ## `ImmersedBoundaryMesh2_2`. The `2_2` suffix denotes that we are using
         ## a 2-dimensional space, and 2-dimensional elements to define the mesh.
         ##
+
         ## We now set the fluid grid resolution. The following code specifies
         ## that we are using a 64x64 grid to simulate our fluid over.
 
-        # Set the fluid grid resolution
         mesh.SetNumGridPtsXAndY(64)
 
-        ## Next, we generate the cells
+        ## Next, we generate the cells. We specify a cell type and cell cycle model. 
+        ## These can be changed to modify the life cycle of the cells. The
+        ## cell generator then constructs the necessary information for each
+        ## of the elements in the mesh.
 
-        # Generate the cells
         cell_type = DifferentiatedCellProliferativeType()
         cell_generator = CellsGeneratorUniformCellCycleModel_2()
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
 
-        ## Then we set up the cell population
-
-        # Set up the cell population
-        cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
-
-        ## We specify a cell type and cell cycle model. These can be
-        ## interchanged to modify the life cycle of the cells. The
-        ## `CellsGenerator` then constructs the necessary information for each
-        ## of the elements in the mesh. Finally, we construct an
-        ## `ImmersedBoundaryCellPopulation`. We then specify whether the
+        ## Finally, we construct the cell population. We then specify whether the
         ## population has active fluid sources or not. For now, we are not
-        ## using any fluid sources, so we set this to false
+        ## using any fluid sources, so we set this to `False`
 
-        # Specify whether the population has active fluid sources
+        cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
         cell_population.SetIfPopulationHasActiveSources(False)
 
-        ## We can set up a `VtkScene` to do a quick visualization of the
-        ## population before running the simulation.
+        ## We can make a quick visualization of the cell population
 
         scene = VtkScene2()
         scene.SetCellPopulation(cell_population)
         nb_manager = JupyterNotebookManager()
         nb_manager.vtk_show(scene, height=300)
 
-        ## Here, we use an `OffLatticeSimulation` simulator to control the
+        ## Next, we create an `OffLatticeSimulation` simulator to control the
         ## simulation. Although the fluid is simulated on a lattice (grid),
         ## the nodes/cells are not bound to a lattice.
 
-        # Create a simulator to manage our simulation
         simulator = OffLatticeSimulation2_2(cell_population)
-        numerical_method = ForwardEulerNumericalMethod2_2()
-        numerical_method.SetUseUpdateNodeLocation(True)
-        simulator.SetNumericalMethod(numerical_method)
+        simulator.SetNumericalMethod(ForwardEulerNumericalMethod2_2())
+        simulator.GetNumericalMethod().SetUseUpdateNodeLocation(True)
 
         ## As we have an off-lattice simulation, we need a way to model the
         ## fluid. This is handled by the `ImmersedBoundarySimulationModifier`.
-        ## Modifiers in chaste are classes that can be attached to simulations
+        ## Modifiers in Chaste are classes that can be attached to simulations
         ## to perform some additional custom functionality each timestep.
         ## In this case, the modifier is responsible for solving the
         ## Navier-Stokes equations and propagating forces between the nodes and
         ## the fluid.
 
-        # Add an immersed boundary simulation modifier.
         ib_modifier = ImmersedBoundarySimulationModifier2()
         simulator.AddSimulationModifier(ib_modifier)
 
         ## We must also provide the modifier with a force model to govern
-        ## interactions between the nodes forming the boundary of the cells.
-        ## Note that these forces only act between nodes in the same cell,
+        ## interactions between the nodes forming the cell membrane.
+        ## Note that these forces only act between nodes in the same cell; 
         ## they do not control interactions between cells.
 
-        # Add a force law to model the behaviour of the cell membrane
-        boundary_force = ImmersedBoundaryLinearMembraneForce2()
-        boundary_force.SetElementSpringConst(1.0 * 1e7)
-        ib_modifier.AddImmersedBoundaryForce(boundary_force)
+        membrane_force = ImmersedBoundaryLinearMembraneForce2()
+        membrane_force.SetElementSpringConst(1.0 * 1e7)
+        ib_modifier.AddImmersedBoundaryForce(membrane_force)
 
-        ## The spring constant(`1.0 * 1e7`) defines how stiff the cell boundary
-        ## is. You can experiment with adjusting the spring constant to change
-        ## the force behaviour between nodes of the cell boundary.
         ## The `ImmersedBoundaryLinearMembraneForce` models forces between
         ## membrane nodes using linear springs i.e, the force applied is
         ## proportional to the deviation of the distance between nodes
-        ## from a rest length.
+        ## from a rest length. The spring constant(`1.0 * 1e7`) defines how 
+        ## stiff the cell boundary is.
+        ##
 
-        # Add a modifier to visualize the simulation progress
-        scene_modifier = JupyterSceneModifier2(nb_manager)
-        scene_modifier.SetVtkScene(scene)
-        scene_modifier.SetUpdateFrequency(100)
-        simulator.AddSimulationModifier(scene_modifier)
+        ## **Practice** Experiment with adjusting the spring constant to 
+        ## change the force behaviour between nodes of the cell boundary.
+        ##
 
-        ## Finally, we set the simulation properties and run it.
+        ## Next, we set the simulation properties
 
-        # Set simulation properties
         dt = 0.05
-        simulator.SetOutputDirectory("Python/TestImmersedBoundary")
+        simulator.SetOutputDirectory("Python/TestImmersedBoundary_1")
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
         simulator.SetEndTime(1000 * dt)
         
-        ## To run the simulation, we call the `Solve()` method. We can also 
-        ## start and end the scene to visualize the simulation progress.
+        ## We can add a modifier to visualize the cell population while the 
+        ## simulation is in progress
 
-        # Perform the simulation
-        scene.Start()
+        scene_modifier = JupyterSceneModifier2(nb_manager)
+        scene_modifier.SetVtkScene(scene)
+        scene_modifier.SetUpdateFrequency(1000)
+        simulator.AddSimulationModifier(scene_modifier)
+
+        ## Finally, to run the simulation we call the `Solve()` method.
+
         simulator.Solve()
-        scene.End()
 
-        # Clear the notebook environment
+        ## Reset the simulation environment in the notebook
+
         TearDownNotebookTest()
 
     ## ### 2. Adding More Cells
 
     def test_multicell_immersed_boundary_simulation(self):
+
         ## #### Multiple Cells
 
-        # Setup the notebook environment for the simulation
+        ## Setup the simulation environment in the notebook
+
         SetupNotebookTest()
+
+        ## Set the start time for the simulation
+
+        SimulationTime.Instance().SetStartTime(0.0)
 
         ## We can use the mesh generator to generate multiple cells. The first
         ## parameter of the mesh generator constructor controls the number of
-        ## cells. Try increasing the number of cells by adjusting the parameter
-        ## value. A sensible range for this tutorial is 4-10 cells.
+        ## cells.
+        ##
 
-        # Create a mesh generator
+        ## **Practice** Try increasing the number of cells by adjusting the 
+        ## parameter value. A sensible range for this tutorial is 4-10 cells.
+
         gen = ImmersedBoundaryPalisadeMeshGenerator(5, 128, 0.1, 2.0, 0.0, False)
 
         ## #### Laminas
         ## In addition to the cells we have seen so far, we can introduce
         ## laminas to the simulation. Laminas are surfaces with reduced
         ## dimensionality. For 3D elements, a lamina is a 2D surface. For the
-        ## 2D elements we are working with, laminas are lines. Changing the last
-        ## parameter of the mesh generator constructor from `False` to `True`
-        ## will generate a basal lamina spanning the palisade cells.
+        ## 2D elements we are currently working with, laminas are lines. 
+        ## Changing the last parameter of the mesh generator constructor from `False`
+        ## to `True` will generate a basal lamina spanning the palisade cells.
         ## Laminas can also interact with the fluid field, and can be made
-        ## 'leaky' to allow some flow across their boundary. This can be used
+        ## "leaky" to allow some flow across their boundary. This can be used
         ## to model a permeable boundary.
         ##
+
+        ## **Practice** Try changing the 6th constructor parameter to create a lamina.
+        ##
+
+
         ## #### Cell Variations
         ## Apart from using the 3rd and 4th constructor parameters to modify
         ## the cell shapes, we can also introduce variation between cells by
         ## modifying the 5th parameter.
+        ##
 
-        # Generate the mesh
+        ## **Practice** Try adjusting the 3rd and 4th constructor parameters to
+        ## introduce cell variations.
+        ##
+
+        ## Next, we generate the mesh and set the fluid grid resolution
+
         mesh = gen.GetMesh()
-
-        # Set the fluid grid resolution
         mesh.SetNumGridPtsXAndY(64)
 
-        # Set the start time for the simulation
-        SimulationTime.Instance().SetStartTime(0.0)
+        ## Below, we generate the cells
 
-        # Generate the cells
         cell_type = DifferentiatedCellProliferativeType()
         cell_generator = CellsGeneratorUniformCellCycleModel_2()
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
 
-        # Set up the cell population
-        cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
+        ## Then we set up the cell population with no active fluid sources
 
-        # Specify whether the population has active fluid sources
+        cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
         cell_population.SetIfPopulationHasActiveSources(False)
 
-        # Visualize the cell population
+        ## We can visualize the cell population below
+
         scene = VtkScene2()
         scene.SetCellPopulation(cell_population)
         nb_manager = JupyterNotebookManager()
         nb_manager.vtk_show(scene, height=300)
 
-        # Create a simulator to manage our simulation
-        simulator = OffLatticeSimulation2_2(cell_population)
-        numerical_method = ForwardEulerNumericalMethod2_2()
-        numerical_method.SetUseUpdateNodeLocation(True)
-        simulator.SetNumericalMethod(numerical_method)
+        ## Now we create a simulator to manage the simulation
 
-        # Add an immersed boundary simulation modifier
+        simulator = OffLatticeSimulation2_2(cell_population)
+        simulator.SetNumericalMethod(ForwardEulerNumericalMethod2_2())
+        simulator.GetNumericalMethod().SetUseUpdateNodeLocation(True)
+
+        ## We add an immersed boundary simulation modifier to the simulator
+
         ib_modifier = ImmersedBoundarySimulationModifier2()
         simulator.AddSimulationModifier(ib_modifier)
 
-        # Add a force law to model the behaviour of the cell membrane
-        boundary_force = ImmersedBoundaryLinearMembraneForce2()
-        boundary_force.SetElementSpringConst(1.0 * 1e7)
-        ib_modifier.AddImmersedBoundaryForce(boundary_force)
+        ## We then add a force law to the simulation modifier to model the 
+        ## behaviour of the cell membrane
 
-        ## #### Intercellular Interactions
+        membrane_force = ImmersedBoundaryLinearMembraneForce2()
+        membrane_force.SetElementSpringConst(1.0 * 1e7)
+        ib_modifier.AddImmersedBoundaryForce(membrane_force)
+
+        ## #### Inter-cellular Interactions
         ## So far, we have encountered forces that act to maintain the shape
-        ## of the cell membrane. We can also introduce forces that apply
-        ## between cells using `ImmersedBoundaryLinearInteractionForce`. I
-        ## Instead of the `SetElementSpringConst` method, it has a
-        ## `SetSpringConst` method which we should use. The rest length can
-        ## also be modified using the `SetRestLength` method.
+        ## of the cell membrane. We can also introduce an inter-cellular
+        ## force law using `ImmersedBoundaryLinearInteractionForce`.
+        ## This has a `SetSpringConst` method instead of a `SetElementSpringConst` 
+        ## method. It also has a `SetRestLength` method that we can use to 
+        ## modify the rest length.
 
-        # Add a new intercellular force law
         interaction_force = ImmersedBoundaryLinearInteractionForce2()
         interaction_force.SetSpringConst(1.0 * 1e6)
         ib_modifier.AddImmersedBoundaryForce(interaction_force)
 
-        # Set simulation properties
+        ## Next, we set the simulation properties
+
         dt = 0.05
-        simulator.SetOutputDirectory("Python/TestImmersedBoundary")
+        simulator.SetOutputDirectory("Python/TestImmersedBoundary_2")
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
         simulator.SetEndTime(1000 * dt)
 
-        # Perform the simulation
+        ## Finally, we run the simulation
+
         simulator.Solve()
 
-        # Visualize the end state
+        ## We can visualize the end state of the cell population
+
         nb_manager.vtk_show(scene, height=300)
 
-        # Clear the notebook environment
+        ## Reset the simulation environment in the notebook
+
         TearDownNotebookTest()
 
     ## ### 3. Adding Fluid Sources
@@ -331,102 +345,118 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         ## #### Adding a Fluid Source
 
-        # Setup the notebook environment for the simulation
+        ## Setup the simulation environment in the notebook
+
         SetupNotebookTest()
 
-        ## We begin by constructing a fluid source object.
+        ## Set the start time for the simulation
+
+        SimulationTime.Instance().SetStartTime(0.0)
+
+        ## We begin by constructing a fluid source object:
 
         source = FluidSource2(0, 0.5, 0.7)
 
         ## This constructs a `FluidSource` object in 2 dimensions. The first
-        ## parameter gives the index of the fluid source. Each source you
-        ## create must have a unique index. The next parameters are the
-        ## `x` and `y` coordinates of the source. Fluid sources in chaste are
+        ## parameter supplies the index of the fluid source. Each source we
+        ## create must have a unique index. The next two parameters are the
+        ## `x` and `y` coordinates of the source. Fluid sources in Chaste are
         ## point-like, that is to say they do not have any area/volume.
         ##
         ## Having created the fluid source, we set its strength:
 
         source.SetStrength(0.012)
 
-        ## Now, we must associate the source with an element in the simulation
-        ## so that the simulation is aware of the source.
-
-        # Create the mesh
+        # Next, we create the mesh
         gen = ImmersedBoundaryPalisadeMeshGenerator(5, 128, 0.1, 2.0, 0.0, False)
         mesh = gen.GetMesh()
         mesh.SetNumGridPtsXAndY(64)
 
-        # Associate the fluid source with an element in the mesh
+        ## We must associate the source with an element in the simulation
+        ## so that the simulation is aware of the source.
+
         mesh.GetElement(0).SetFluidSource(source)
 
-        ## Finally, we must tell the cell population that fluid sources are present.
+        ## We now generate the cells
 
-        # Set up the cell population
-        SimulationTime.Instance().SetStartTime(0.0)
         cell_type = DifferentiatedCellProliferativeType()
         cell_generator = CellsGeneratorUniformCellCycleModel_2()
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
+
+        ## Then we set up the cell population
         cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
 
-        # Specify that fluid sources are present
+        ## Finally, we must tell the cell population that fluid sources are present.
+
         cell_population.SetIfPopulationHasActiveSources(True)
 
-        # Visualize the cell population
+        ## #### Varying the Source Location
+        ## **Practice** You can experiment with the source location. Try moving it 
+        ## closer to and further away from the cells.
+        ##
+
+        ## #### Varying the Source Strength
+        ## **Practice** Try modifying the source strength to see what impact this 
+        ## has on the cell shapes.
+        ##
+
+        ## Below, we visualize the cell population
+
         scene = VtkScene2()
         scene.SetCellPopulation(cell_population)
         nb_manager = JupyterNotebookManager()
         nb_manager.vtk_show(scene, height=300)
 
-        ## #### Varying the Source Location
-        ## You can experiment with the source location. Try moving it closer to
-        ## and further away from the cells.
-        ##
-        ## #### Varying the Source Strength
-        ## Try modifying the source strength to see what impact this has on
-        ## the cell shapes.
+        ## Create a simulator to manage the simulation
 
-        # Create a simulator
         simulator = OffLatticeSimulation2_2(cell_population)
-        numerical_method = ForwardEulerNumericalMethod2_2()
-        numerical_method.SetUseUpdateNodeLocation(True)
-        simulator.SetNumericalMethod(numerical_method)
+        simulator.SetNumericalMethod(ForwardEulerNumericalMethod2_2())
+        simulator.GetNumericalMethod().SetUseUpdateNodeLocation(True)
 
-        # Add an immersed boundary simulation modifier
+        ## Add an immersed boundary simulation modifier
+
         ib_modifier = ImmersedBoundarySimulationModifier2()
         simulator.AddSimulationModifier(ib_modifier)
 
         ## #### Fluid-Cell Interaction
-        ## Have a go at modifying the spring constant of the
+        ## **Practice** Try modifying the spring constant of the
         ## `ImmersedBoundaryLinearMembraneForce` to see how this changes the
         ## effect of the fluid source on the cells.
 
-        boundary_force = ImmersedBoundaryLinearMembraneForce2()
-        boundary_force.SetElementSpringConst(1.0 * 1e7)
-        ib_modifier.AddImmersedBoundaryForce(boundary_force)
+        membrane_force = ImmersedBoundaryLinearMembraneForce2()
+        membrane_force.SetElementSpringConst(1.0 * 1e7)
+        ib_modifier.AddImmersedBoundaryForce(membrane_force)
+
+        ## Add an inter-cellular force law
 
         interaction_force = ImmersedBoundaryLinearInteractionForce2()
         interaction_force.SetSpringConst(1.0 * 1e6)
         ib_modifier.AddImmersedBoundaryForce(interaction_force)
 
         ## #### Adding More Sources
-        ## Try adding second fluid source. You will need to use a unique index,
-        ## and attach it to a different element as each element can only manage
-        ## a single fluid source.
+        ## **Practice** Try adding a second fluid source. You will need to 
+        ## use a unique index, and attach it to a different element as 
+        ## each element can only manage a single fluid source.
+        ##
 
-        # Set simulation properties
+        ## Set the simulation properties
+
         dt = 0.05
-        simulator.SetOutputDirectory("Python/TestImmersedBoundary")
+        simulator.SetOutputDirectory("Python/TestImmersedBoundary_3")
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
         simulator.SetEndTime(1000 * dt)
 
-        # Perform the simulation
+        # Run the simulation
+
         simulator.Solve()
 
         # Visualize the end state
+        
         nb_manager.vtk_show(scene, height=300)
         
-        # Clear the notebook environment
+        ## Reset the simulation environment in the notebook
+
         TearDownNotebookTest()
 
         ## #### Further Exercises
