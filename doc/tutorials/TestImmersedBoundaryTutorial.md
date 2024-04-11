@@ -8,7 +8,7 @@ toc: true
 layout: "single"
 ---
 
-This tutorial is automatically generated from [TestImmersedBoundaryTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestImmersedBoundaryTutorial.py) at revision [c238afe6](https://github.com/Chaste/PyChaste/commit/c238afe658a4392521745231677f1d4a3e59d419).
+This tutorial is automatically generated from [TestImmersedBoundaryTutorial](https://github.com/Chaste/PyChaste/blob/develop/test/python/cell_based/tutorials/TestImmersedBoundaryTutorial.py) at revision [a17a4092](https://github.com/Chaste/PyChaste/commit/a17a4092069eaa64fe77e1e5d286ef0595ebc04f).
 Note that the code is given in full at the bottom of the page.
 
 
@@ -429,19 +429,21 @@ We now generate the cells
 
 ```
 Then we set up the cell population
-cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
 
+```python
+        cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
+
+```
 Finally, we must tell the cell population that fluid sources are present.
 
 ```python
         cell_population.SetIfPopulationHasActiveSources(True)
 
 ```
-#### Varying the Source Location
+#### Varying the Source Location and Strength
  **Practice** You can experiment with the source location. Try moving it
  closer to and further away from the cells.
  
-#### Varying the Source Strength
  **Practice** Try modifying the source strength to see what impact this
  has on the cell shapes.
  
@@ -493,21 +495,25 @@ Add an inter-cellular force law
  use a unique index, and attach it to a different element as
  each element can only manage a single fluid source.
  
-Set the simulation properties
+Next, we set the simulation properties
 
 ```python
         dt = 0.05
         simulator.SetOutputDirectory("Python/TestImmersedBoundary_3")
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
-        simulator.SetEndTime(1000 * dt)
+        simulator.SetEndTime(300 * dt)
 
-        # Run the simulation
+```
+Finally, we run the simulation
 
+```python
         simulator.Solve()
 
-        # Visualize the end state
+```
+Then we visualize the end state
 
+```python
         nb_manager.vtk_show(scene, height=300)
 
 ```
@@ -687,6 +693,8 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         cell_generator = CellsGeneratorUniformCellCycleModel_2()
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
 
+        cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
+
         cell_population.SetIfPopulationHasActiveSources(True)
 
         scene = VtkScene2()
@@ -713,13 +721,9 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         simulator.SetOutputDirectory("Python/TestImmersedBoundary_3")
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
-        simulator.SetEndTime(1000 * dt)
-
-        # Run the simulation
+        simulator.SetEndTime(300 * dt)
 
         simulator.Solve()
-
-        # Visualize the end state
 
         nb_manager.vtk_show(scene, height=300)
 

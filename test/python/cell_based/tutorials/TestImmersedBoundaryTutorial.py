@@ -384,18 +384,18 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         cells = cell_generator.GenerateBasicRandom(mesh.GetNumElements(), cell_type)
 
         ## Then we set up the cell population
+
         cell_population = ImmersedBoundaryCellPopulation2(mesh, cells)
 
         ## Finally, we must tell the cell population that fluid sources are present.
 
         cell_population.SetIfPopulationHasActiveSources(True)
 
-        ## #### Varying the Source Location
+        ## #### Varying the Source Location and Strength
         ## **Practice** You can experiment with the source location. Try moving it 
         ## closer to and further away from the cells.
         ##
 
-        ## #### Varying the Source Strength
         ## **Practice** Try modifying the source strength to see what impact this 
         ## has on the cell shapes.
         ##
@@ -439,20 +439,20 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         ## each element can only manage a single fluid source.
         ##
 
-        ## Set the simulation properties
+        ## Next, we set the simulation properties
 
         dt = 0.05
         simulator.SetOutputDirectory("Python/TestImmersedBoundary_3")
         simulator.SetDt(dt)
         simulator.SetSamplingTimestepMultiple(4)
-        simulator.SetEndTime(1000 * dt)
+        simulator.SetEndTime(300 * dt)
 
-        # Run the simulation
+        ## Finally, we run the simulation
 
         simulator.Solve()
 
-        # Visualize the end state
-        
+        ## Then we visualize the end state
+
         nb_manager.vtk_show(scene, height=300)
         
         ## Reset the simulation environment in the notebook
