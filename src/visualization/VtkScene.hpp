@@ -143,7 +143,7 @@ public:
     void End();
 
     /**
-     * Render the current scene and return is as a char array, can be passed
+     * Render the current scene and return it as a char array that can be passed
      * into a Python buffer for display.
      * @return the scene as a char array
      */
