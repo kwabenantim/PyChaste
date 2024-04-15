@@ -73,7 +73,6 @@ Copyright (c) 2005-2024, University of Oxford.
 
 #include <vector>
 #include "SmartPointers.hpp"
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
@@ -172,6 +171,12 @@ public:
      * @param pRenderer the current renderer
      */
     void AddVertexBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer);
+
+    /**
+     * Specialized class for adding Immersed boundary population
+     * @param pRenderer the current renderer
+     */
+    void AddImmersedBoundaryCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer);
 
     /**
      * Specialized class for adding Ca based population
