@@ -34,7 +34,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <boost/lexical_cast.hpp>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
 #include <vtkPoints.h>
@@ -43,9 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkUnsignedCharArray.h>
-#if VTK_MAJOR_VERSION > 5
-    #include <vtkNamedColors.h>
-#endif
+#include <vtkNamedColors.h>
 #include <vtkSphereSource.h>
 #include <vtkGlyph3D.h>
 #include <vtkGlyph2D.h>
@@ -110,9 +107,7 @@ VtkScene<DIM>::VtkScene()
       mpRenderWindow(vtkSmartPointer<vtkRenderWindow>::New()),
       mpRenderWindowInteractor(vtkSmartPointer<vtkRenderWindowInteractor>::New()),
       mOutputFilePath(),
-    #if VTK_MAJOR_VERSION > 5
       mAnimationWriter(vtkSmartPointer<vtkOggTheoraWriter>::New()),
-    #endif
       mWindowToImageFilter(vtkSmartPointer<vtkWindowToImageFilter>::New()),
       mIsInteractive(false),
       mSaveAsAnimation(false),
@@ -214,7 +209,7 @@ void VtkScene<DIM>::ResetRenderer(unsigned time_step)
             p_writer->Write();
         }
     }
-    #if VTK_MAJOR_VERSION > 5
+
     if(mSaveAsAnimation)
     {
         if(!mSaveAsImages)
@@ -225,7 +220,7 @@ void VtkScene<DIM>::ResetRenderer(unsigned time_step)
         }
         mAnimationWriter->Write();
     }
-    #endif // VTK_MAJOR_VERSION > 5
+
     if(mIsInteractive)
     {
         mpRenderWindow->SetOffScreenRendering(0);
@@ -254,12 +249,10 @@ void VtkScene<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<D
 template<unsigned DIM>
 void VtkScene<DIM>::End()
 {
-    #if VTK_MAJOR_VERSION > 5
     if(mSaveAsAnimation and mHasStarted)
     {
         mAnimationWriter->End();
     }
-    #endif
 }
 
 template<unsigned DIM>
@@ -285,12 +278,10 @@ void VtkScene<DIM>::Start()
 
     if(mSaveAsAnimation)
     {
-        #if VTK_MAJOR_VERSION > 5
         mAnimationWriter->SetInputConnection(mWindowToImageFilter->GetOutputPort());
         mAnimationWriter->SetFileName((mOutputFilePath+".ogg").c_str());
         mAnimationWriter->SetRate(1.0);
         mAnimationWriter->Start();
-        #endif
     }
 
     mHasStarted = true;

@@ -70,7 +70,6 @@ Copyright (c) 2005-2024, University of Oxford.
 
 #include <algorithm>
 #include <boost/lexical_cast.hpp>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
@@ -106,6 +105,7 @@ Copyright (c) 2005-2024, University of Oxford.
 #include "Exception.hpp"
 #include "CellLabel.hpp"
 #include "CaBasedCellPopulation.hpp"
+#include "ImmersedBoundaryCellPopulation.hpp"
 #include "PottsBasedCellPopulation.hpp"
 #include "NodeBasedCellPopulation.hpp"
 #include "VertexBasedCellPopulation.hpp"
@@ -147,7 +147,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddCaBasedCellPopulationActor(vt
     boost::shared_ptr<CaBasedCellPopulation<DIM> > p_ca_population =
             boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation);
 
-    if(p_ca_population and mShowPottsMeshEdges)
+    if(p_ca_population && mShowPottsMeshEdges)
     {
         vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
         p_points->GetData()->SetName("Vertex positions");
@@ -221,7 +221,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddPottsBasedCellPopulationActor
     boost::shared_ptr<PottsBasedCellPopulation<DIM> > p_potts_population =
             boost::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation);
 
-    if(p_potts_population and mShowPottsMeshEdges)
+    if(p_potts_population && mShowPottsMeshEdges)
     {
         vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
         p_points->GetData()->SetName("Vertex positions");
@@ -297,7 +297,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddPottsBasedCellPopulationActor
                 {
                     p_element_ids->InsertNextTuple1((*cell_iter)->GetCellProliferativeType()->GetColour());
                 }
-                else if(mColorByCellData and !this->mDataLabel.empty())
+                else if(mColorByCellData && !this->mDataLabel.empty())
                 {
                     std::vector<std::string> keys = (*cell_iter)->GetCellData()->GetKeys();
                     if (std::find(keys.begin(), keys.end(), this->mDataLabel) != keys.end())
@@ -455,7 +455,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRend
     }
 
     // Show cell centres if requested
-    if(mShowCellCentres or boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) or
+    if(mShowCellCentres || boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) ||
             boost::dynamic_pointer_cast<NodeBasedCellPopulation<DIM> >(mpCellPopulation))
     {
         vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
@@ -480,7 +480,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRend
             {
                 p_cell_color_reference_data->InsertNextTuple1((*cell_iter)->GetCellProliferativeType()->GetColour());
             }
-            else if(mColorByCellData and !this->mDataLabel.empty())
+            else if(mColorByCellData && !this->mDataLabel.empty())
             {
                 std::vector<std::string> keys = (*cell_iter)->GetCellData()->GetKeys();
                 if (std::find(keys.begin(), keys.end(), this->mDataLabel) != keys.end())
@@ -588,7 +588,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRend
         }
         pRenderer->AddActor(p_actor);
 
-        if(!this->mDataLabel.empty() and this->mShowScaleBar)
+        if(!this->mDataLabel.empty() && this->mShowScaleBar)
         {
             this->mpScaleBar->SetLookupTable(p_scaled_ctf);
             this->mpScaleBar->SetTitle(this->mDataLabel.c_str());
@@ -596,21 +596,25 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRend
         }
     }
 
-    if(boost::dynamic_pointer_cast<MeshBasedCellPopulation<DIM> >(mpCellPopulation) and (mShowMutableMeshEdges or mShowVoronoiMeshEdges))
+    if(boost::dynamic_pointer_cast<MeshBasedCellPopulation<DIM> >(mpCellPopulation) && (mShowMutableMeshEdges || mShowVoronoiMeshEdges))
     {
         AddMeshBasedCellPopulationActor(pRenderer);
     }
-    else if (boost::dynamic_pointer_cast<VertexBasedCellPopulation<DIM> >(mpCellPopulation) and mShowVoronoiMeshEdges)
+    else if (boost::dynamic_pointer_cast<VertexBasedCellPopulation<DIM> >(mpCellPopulation) && mShowVoronoiMeshEdges)
     {
         AddVertexBasedCellPopulationActor(pRenderer);
     }
-    else if (boost::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation) and (mShowPottsMeshEdges or mShowPottsMeshOutlines))
+    else if (boost::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation) && (mShowPottsMeshEdges || mShowPottsMeshOutlines))
     {
         AddPottsBasedCellPopulationActor(pRenderer);
     }
-    else if (boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) and mShowPottsMeshEdges)
+    else if (boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) && mShowPottsMeshEdges)
     {
         AddCaBasedCellPopulationActor(pRenderer);
+    }
+    else if (boost::dynamic_pointer_cast<ImmersedBoundaryCellPopulation<DIM> >(mpCellPopulation))
+    {
+        AddImmersedBoundaryCellPopulationActor(pRenderer);
     }
 }
 
@@ -674,7 +678,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddVertexBasedCellPopulationActo
                 p_cell_color_reference_data->InsertNextTuple1(p_biological_cell->GetCellProliferativeType()->GetColour());
             }
 
-            else if(mColorByCellData and !this->mDataLabel.empty())
+            else if(mColorByCellData && !this->mDataLabel.empty())
             {
                 std::vector<std::string> keys = p_biological_cell->GetCellData()->GetKeys();
                 if (std::find(keys.begin(), keys.end(), this->mDataLabel) != keys.end())
@@ -791,7 +795,193 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddVertexBasedCellPopulationActo
         p_voronoi_tube_actor->GetProperty()->SetColor(this->mEdgeColor[0], this->mEdgeColor[1], this->mEdgeColor[2]);
         pRenderer->AddActor(p_voronoi_tube_actor);
 
-        if(!this->mDataLabel.empty() and this->mShowScaleBar)
+        if(!this->mDataLabel.empty() && this->mShowScaleBar)
+        {
+            this->mpScaleBar->SetLookupTable(p_scaled_ctf);
+            this->mpScaleBar->SetTitle(this->mDataLabel.c_str());
+            pRenderer->AddActor(this->mpScaleBar);
+        }
+    }
+}
+
+template<unsigned DIM>
+void CellPopulationPyChasteActorGenerator<DIM>::AddImmersedBoundaryCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer)
+{
+    boost::shared_ptr<ImmersedBoundaryCellPopulation<DIM> > p_cell_population = boost::dynamic_pointer_cast<ImmersedBoundaryCellPopulation<DIM> >(mpCellPopulation);
+
+    if(!p_cell_population)
+    {
+        EXCEPTION("Could not cast mesh to Immersed Boundary type.");
+    }
+
+    if(mShowVoronoiMeshEdges)
+    {
+        vtkSmartPointer<vtkUnstructuredGrid> p_voronoi_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        vtkSmartPointer<vtkDoubleArray> p_cell_color_reference_data = vtkSmartPointer<vtkDoubleArray>::New();
+        p_cell_color_reference_data->SetName("CellColors");
+
+        vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+        p_points->GetData()->SetName("Vertex positions");
+        for (unsigned node_num=0; node_num<p_cell_population->rGetMesh().GetNumNodes(); node_num++)
+        {
+            c_vector<double, DIM> position = p_cell_population->rGetMesh().GetNode(node_num)->rGetLocation();
+            if (DIM==2)
+            {
+                p_points->InsertPoint(node_num, position[0], position[1], 0.0);
+            }
+            else
+            {
+                p_points->InsertPoint(node_num, position[0], position[1], position[2]);
+            }
+        }
+        p_voronoi_grid->SetPoints(p_points);
+
+        for (typename ImmersedBoundaryMesh<DIM,DIM>::ImmersedBoundaryElementIterator iter = p_cell_population->rGetMesh().GetElementIteratorBegin();
+             iter != p_cell_population->rGetMesh().GetElementIteratorEnd(); ++iter)
+        {
+            vtkSmartPointer<vtkCell> p_cell;
+            if (DIM == 2)
+            {
+                p_cell = vtkSmartPointer<vtkPolygon>::New();
+            }
+            else
+            {
+                p_cell = vtkSmartPointer<vtkConvexPointSet>::New();
+            }
+            vtkSmartPointer<vtkIdList> p_cell_id_list = p_cell->GetPointIds();
+            p_cell_id_list->SetNumberOfIds(iter->GetNumNodes());
+            for (unsigned j=0; j<iter->GetNumNodes(); ++j)
+            {
+                p_cell_id_list->SetId(j, iter->GetNodeGlobalIndex(j));
+            }
+            p_voronoi_grid->InsertNextCell(p_cell->GetCellType(), p_cell_id_list);
+
+            unsigned element_index = iter->GetIndex();
+            CellPtr p_biological_cell = p_cell_population->GetCellUsingLocationIndex(element_index);
+
+            if(mColorByCellType)
+            {
+                p_cell_color_reference_data->InsertNextTuple1(p_biological_cell->GetCellProliferativeType()->GetColour());
+            }
+
+            else if(mColorByCellData && !this->mDataLabel.empty())
+            {
+                std::vector<std::string> keys = p_biological_cell->GetCellData()->GetKeys();
+                if (std::find(keys.begin(), keys.end(), this->mDataLabel) != keys.end())
+                {
+                    p_cell_color_reference_data->InsertNextTuple1(p_biological_cell->GetCellData()->GetItem(this->mDataLabel));
+                }
+                else
+                {
+                    p_cell_color_reference_data->InsertNextTuple1(0.0);
+                }
+            }
+
+            else if(mColorByCellMutationState)
+            {
+                double mutation_state = p_biological_cell->GetMutationState()->GetColour();
+
+                CellPropertyCollection collection = p_biological_cell->rGetCellPropertyCollection();
+                CellPropertyCollection label_collection = collection.GetProperties<CellLabel>();
+
+                if (label_collection.GetSize() == 1)
+                {
+                    boost::shared_ptr<CellLabel> p_label = boost::static_pointer_cast<CellLabel>(label_collection.GetProperty());
+                    mutation_state = p_label->GetColour();
+                }
+                p_cell_color_reference_data->InsertNextTuple1(mutation_state);
+            }
+            else if(mColorByCellLabel)
+            {
+                double label = 0.0;
+                if (p_biological_cell->HasCellProperty<CellLabel>())
+                {
+                    CellPropertyCollection collection = p_biological_cell->rGetCellPropertyCollection().GetProperties<CellLabel>();
+                    boost::shared_ptr<CellLabel> p_label = boost::static_pointer_cast<CellLabel>(collection.GetProperty());
+                    label = p_label->GetColour();
+                }
+                p_cell_color_reference_data->InsertNextTuple1(label);
+            }
+            else
+            {
+                p_cell_color_reference_data->InsertNextTuple1(p_biological_cell->GetCellId());
+            }
+        }
+
+        p_voronoi_grid->GetCellData()->AddArray(p_cell_color_reference_data);
+        p_voronoi_grid->GetCellData()->SetScalars(p_cell_color_reference_data);
+
+        vtkSmartPointer<vtkColorTransferFunction> p_scaled_ctf = vtkSmartPointer<vtkColorTransferFunction>::New();
+        if(!mColorByCellData)
+        {
+            double range[2];
+            p_voronoi_grid->GetCellData()->GetArray("CellColors")->GetRange(range);
+            for(unsigned idx=0; idx<255; idx++)
+            {
+                double color[3];
+                this->mpDiscreteColorTransferFunction->GetColor((255.0-double(idx))/255.0, color);
+                p_scaled_ctf->AddRGBPoint(range[0] + double(idx)*(range[1]-range[0])/255.0, color[0], color[1], color[2]);
+            }
+        }
+        else
+        {
+            double range[2];
+            p_voronoi_grid->GetCellData()->GetArray("CellColors")->GetRange(range);
+            for(unsigned idx=0; idx<255; idx++)
+            {
+                double color[3];
+                this->mpColorTransferFunction->GetColor(double(idx)/255.0, color);
+                p_scaled_ctf->AddRGBPoint(range[0] + double(idx)*(range[1]-range[0])/255.0, color[0], color[1], color[2]);
+            }
+        }
+        p_scaled_ctf->Build();
+
+        vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
+        #if VTK_MAJOR_VERSION <= 5
+            p_geom_filter->SetInput(p_voronoi_grid);
+        #else
+            p_geom_filter->SetInputData(p_voronoi_grid);
+        #endif
+
+        vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+        p_mapper->SetInputConnection(p_geom_filter->GetOutputPort());
+        p_mapper->SetLookupTable(p_scaled_ctf);
+        p_mapper->ScalarVisibilityOn();
+        p_mapper->SelectColorArray("CellColors");
+        p_mapper->SetScalarModeToUseCellData();
+        p_mapper->SetColorModeToMapScalars();
+
+        vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
+        p_actor->SetMapper(p_mapper);
+        p_actor->GetProperty()->SetOpacity(this->mVolumeOpacity);
+        if(mColorCellByUserDefined)
+        {
+            p_actor->GetProperty()->SetColor(this->mPointColor[0], this->mPointColor[1], this->mPointColor[2]);
+        }
+        pRenderer->AddActor(p_actor);
+
+        vtkSmartPointer<vtkFeatureEdges> p_voronoi_extract_edges = vtkSmartPointer<vtkFeatureEdges>::New();
+        p_voronoi_extract_edges->SetInputConnection(p_geom_filter->GetOutputPort());
+        p_voronoi_extract_edges->SetFeatureEdges(false);
+        p_voronoi_extract_edges->SetBoundaryEdges(true);
+        p_voronoi_extract_edges->SetManifoldEdges(true);
+        p_voronoi_extract_edges->SetNonManifoldEdges(false);
+
+        vtkSmartPointer<vtkTubeFilter> p_voronoi_tubes = vtkSmartPointer<vtkTubeFilter>::New();
+        p_voronoi_tubes->SetInputConnection(p_voronoi_extract_edges->GetOutputPort());
+        p_voronoi_tubes->SetRadius(this->mEdgeSize);
+        p_voronoi_tubes->SetNumberOfSides(12);
+
+        vtkSmartPointer<vtkPolyDataMapper> p_voronoi_tube_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+        p_voronoi_tube_mapper->SetInputConnection(p_voronoi_tubes->GetOutputPort());
+        p_voronoi_tube_mapper->ScalarVisibilityOff();
+
+        vtkSmartPointer<vtkActor> p_voronoi_tube_actor = vtkSmartPointer<vtkActor>::New();
+        p_voronoi_tube_actor->SetMapper(p_voronoi_tube_mapper);
+        p_voronoi_tube_actor->GetProperty()->SetColor(this->mEdgeColor[0], this->mEdgeColor[1], this->mEdgeColor[2]);
+        pRenderer->AddActor(p_voronoi_tube_actor);
+
+        if(!this->mDataLabel.empty() && this->mShowScaleBar)
         {
             this->mpScaleBar->SetLookupTable(p_scaled_ctf);
             this->mpScaleBar->SetTitle(this->mDataLabel.c_str());
@@ -877,7 +1067,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddMeshBasedCellPopulationActor(
                         p_cell_color_reference_data->InsertNextTuple1(p_biological_cell->GetCellProliferativeType()->GetColour());
                     }
 
-                    else if(mColorByCellData and !this->mDataLabel.empty())
+                    else if(mColorByCellData && !this->mDataLabel.empty())
                     {
                         std::vector<std::string> keys = p_biological_cell->GetCellData()->GetKeys();
                         if (std::find(keys.begin(), keys.end(), this->mDataLabel) != keys.end())
@@ -1005,7 +1195,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddMeshBasedCellPopulationActor(
         p_voronoi_tube_actor->GetProperty()->SetColor(this->mEdgeColor[0], this->mEdgeColor[1], this->mEdgeColor[2]);
         pRenderer->AddActor(p_voronoi_tube_actor);
 
-        if(!this->mDataLabel.empty() and this->mShowScaleBar)
+        if(!this->mDataLabel.empty() && this->mShowScaleBar)
         {
             this->mpScaleBar->SetLookupTable(p_scaled_ctf);
             this->mpScaleBar->SetTitle(this->mDataLabel.c_str());
