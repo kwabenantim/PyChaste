@@ -2,16 +2,17 @@
 {% set minor_version = ".".join(version.split(".")[:2]) %}
 
 {% set build = 0 %}
-{% set build_string = "py{}h{}_{}".format(CONDA_PY, PKG_HASH, build) %}
+{% set build_string = "h{}_{}".format(PKG_HASH, build) %}
 
 package:
   name: xsd
   version: {{ version }}
 
 source:
-  fn:  xsd-{{ version }}.tar.bz2
   url: http://www.codesynthesis.com/download/xsd/{{ minor_version }}/xsd-{{ version }}+dep.tar.bz2
   sha256: eca52a9c8f52cdbe2ae4e364e4a909503493a0d51ea388fc6c9734565a859817
+  patches:
+    - patches/xsd-4.0.0.patch
 
 build:
   number: {{ build }}

@@ -41,6 +41,11 @@ export CPU_COUNT="${parallel:-$(nproc)}"
 
 export PYTHONUNBUFFERED=1
 
+# Get patches
+mkdir -p "${RECIPE_ROOT}/patches/"
+curl https://raw.githubusercontent.com/Homebrew/formula-patches/85fa66a9/xsd/4.0.0.patch -o "${RECIPE_ROOT}/patches/xsd-4.0.0.patch"
+echo "55a15b7a16404e659060cc2487f198a76d96da7ec74e2c0fac9e38f24b151fa7 ${RECIPE_ROOT}/patches/xsd-4.0.0.patch" | sha256sum -c
+
 # Configure conda build path
 mkdir -p "${CONDA_BLD_PATH}"
 
@@ -86,4 +91,4 @@ conda config --env --show-sources
 conda list --show-channel-urls
 
 # Build conda package
-conda mambabuild "${RECIPE_ROOT}" -m "${CONFIG_FILE}"
+conda mambabuild "${RECIPE_ROOT}" --variant-config-files "${CONFIG_FILE}"
