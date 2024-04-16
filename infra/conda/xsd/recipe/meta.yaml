@@ -1,0 +1,22 @@
+{% set version = "4.0.0" %}
+{% set minor_version = ".".join(version.split(".")[:2]) %}
+
+{% set build = 0 %}
+{% set build_string = "py{}h{}_{}".format(CONDA_PY, PKG_HASH, build) %}
+
+package:
+  name: xsd
+  version: {{ version }}
+
+source:
+  fn:  xsd-{{ version }}-x86_64-linux-gnu.tar.bz2
+  url: http://www.codesynthesis.com/download/xsd/{{ minor_version }}/linux-gnu/x86_64/xsd-{{ version }}-x86_64-linux-gnu.tar.bz2
+  sha256: d01060cbf4b3a1e462a5c5ad1a5a6773b541766dbbb98e50c9efb8f2a2dd55b7
+
+build:
+  number: {{ build }}
+  string: {{ build_string }}
+
+about:
+  home: http://www.codesynthesis.com/products/xsd/
+  license: GPL 2.0 with FLOSS Exception
