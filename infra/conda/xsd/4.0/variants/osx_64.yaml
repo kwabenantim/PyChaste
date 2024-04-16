@@ -1,7 +1,9 @@
+MACOSX_DEPLOYMENT_TARGET:
+  - "10.9"
 c_compiler:
-  - gcc
+  - clang
 c_compiler_version:
-  - "9"
+  - "16"
 cdt_name:
   - cos7
 channel_sources:
@@ -13,22 +15,20 @@ cxx_compiler:
   - gxx
 cxx_compiler_version:
   - "9"
-docker_image:
-  - quay.io/condaforge/linux-anvil-cos7-x86_64
 fortran_compiler:
   - gfortran
 fortran_compiler_version:
   - "9"
+macos_machine:
+  - x86_64-apple-darwin13.4.0
 pin_run_as_build:
-  python:
-    min_pin: x.x
-    max_pin: x.x
-python:
-  - 3.8.* *_cpython
+  xercesc:
+    min_pin: x
+    max_pin: x
 target_platform:
-  - linux-64
+  - osx-64
 xercesc:
-  - ">=3"
+  - "3.0.0"
 zip_keys:
   - - c_compiler_version
     - cxx_compiler_version

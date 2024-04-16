@@ -1,0 +1,35 @@
+MACOSX_DEPLOYMENT_TARGET:
+  - "11.0"
+c_compiler:
+  - clang
+c_compiler_version:
+  - "16"
+cdt_name:
+  - cos7
+channel_sources:
+  - pychaste
+  - conda-forge
+channel_targets:
+  - pychaste main
+cxx_compiler:
+  - gxx
+cxx_compiler_version:
+  - "9"
+fortran_compiler:
+  - gfortran
+fortran_compiler_version:
+  - "9"
+macos_machine:
+  - arm64-apple-darwin20.0.0
+pin_run_as_build:
+  xercesc:
+    min_pin: x
+    max_pin: x
+target_platform:
+  - osx-arm64
+xercesc:
+  - "3.0.0"
+zip_keys:
+  - - c_compiler_version
+    - cxx_compiler_version
+    - fortran_compiler_version
