@@ -17,6 +17,16 @@ build:
   number: {{ build }}
   string: {{ build_string }}
 
+requirements:
+  host:
+    - xerces-c
+  run:
+    - xerces-c
+
+test:
+  commands:
+    - xsd --version
+
 about:
   home: http://www.codesynthesis.com/products/xsd/
   license: GPL 2.0 with FLOSS Exception

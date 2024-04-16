@@ -6,7 +6,7 @@ usage() {
   echo 'Usage: '"$(basename "$0")"' --variant=name [--parallel=num]'
   echo 'Example:'
   echo 'docker run --rm -it quay.io/condaforge/linux-anvil-cos7-x86_64 /bin/bash'
-  echo "$(basename "$0")"' --variant=linux_64_python3.10.____cpython --parallel=4'
+  echo "$(basename "$0")"' --variant=linux_64_python3.8.____cpython --parallel=4'
   exit 1
 }
 
@@ -17,7 +17,7 @@ parallel=
 for option; do
   case $option in
   --variant=*)
-    variant=$(expr "x$option" : "x--version=\(.*\)")
+    variant=$(expr "x$option" : "x--variant=\(.*\)")
     ;;
   --parallel=*)
     parallel=$(expr "x$option" : "x--parallel=\(.*\)")
