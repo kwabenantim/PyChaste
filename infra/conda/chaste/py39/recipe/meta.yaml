@@ -1,0 +1,80 @@
+{% set version = "2023.10.dev1" %}
+{% set build = 0 %}
+
+{% set build_string = "py{}h{}_{}".format(CONDA_PY, PKG_HASH, build) %}
+
+package:
+  name: chaste
+  version: {{ version }}
+
+source:
+  path: /tmp/Chaste
+
+build:
+  number: {{ build }}
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - {{ compiler('fortran') }}
+    - cmake
+    - make
+    - python
+    - pip
+    - distro
+    - git
+    - {{ cdt('libice-devel') }}
+    - {{ cdt('libsm-devel') }}
+    - {{ cdt('libx11-devel') }}
+    - {{ cdt('libxext') }}
+    - {{ cdt('libxt-devel') }}
+
+  host:
+    - python
+    - boost-cpp
+    - hdf5
+    - hdf5 * mpi_mpich*
+    - metis
+    - mpich
+    - parmetis
+    - petsc
+    - petsc4py
+    - sundials
+    - vtk
+    - xerces-c
+    - xsd 4.*
+    - xvfbwrapper
+
+  run:
+    - python
+    - boost-cpp
+    - hdf5
+    - hdf5 * mpi_mpich*
+    - metis
+    - mpich
+    - parmetis
+    - petsc
+    - petsc4py
+    - sundials
+    - vtk
+    - xerces-c
+    - xsd 4.*
+    - xvfbwrapper
+    - matplotlib
+    - numpy
+
+test:
+  imports:
+    - chaste
+    - chaste.cell_based
+    - chaste.mesh
+    - chaste.ode
+    - chaste.pde
+
+about:
+  home: https://chaste.github.io
+  license: BSD-3-Clause
+  summary: >
+    Chaste is a general purpose simulation package for computational biology.
+  dev_url: https://github.com/Chaste/Chaste
+  doc_url: https://chaste.github.io/docs/
