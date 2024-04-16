@@ -1,13 +1,7 @@
 #!/bin/bash
 set -xeo pipefail
 
-
-'linux_64_python3.10.____cpython'
-export UPLOAD_PACKAGES='False'
-export BUILD_WITH_CONDA_DEBUG='0'
-export DOCKER_IMAGE='quay.io/condaforge/linux-anvil-cos7-x86_64'
-export CPU_COUNT=4
-
+# Show usage
 usage() {
   echo 'Usage: '"$(basename "$0")"' --variant=name [--parallel=num]'
   echo 'Example:'
