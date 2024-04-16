@@ -41,7 +41,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name = "chaste",
-    version = "2019.1",
+    version = "2024.1",
     packages = find_packages(),
     
     package_data={
@@ -67,19 +67,24 @@ setup(
     zip_safe = False,
 
     # Project Metadata
-    author = "Chaste Team, University of Oxford",
-    author_email = "grogan@maths.ox.ac.uk",
+    author = "Chaste Developers",
+    author_email = "chaste-users@maillist.ox.ac.uk",
     description = "Python bindings for Chaste, a general purpose simulation package for computational biology.",
     license = "BSD-3-Clause",
     keywords = "cancer developmental biology electrophysiology scientific",
 
     classifiers=[
-        'Development Status :: 1 - Planning',
+        "Development Status :: 4 - Beta",
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
-        'Operating System :: Unix',  
+        "Operating System :: POSIX",
         'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 3.10',
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: Implementation :: CPython",
     ],
 
     distclass=BinaryDistribution
