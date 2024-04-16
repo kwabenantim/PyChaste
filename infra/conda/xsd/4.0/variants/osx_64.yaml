@@ -17,14 +17,10 @@ cxx_compiler_version:
   - "16"
 macos_machine:
   - x86_64-apple-darwin13.4.0
-pin_run_as_build:
-  xercesc:
-    min_pin: x
-    max_pin: x
 target_platform:
   - osx-64
 xercesc:
-  - "3"
+  - ">=3,<4"
 zip_keys:
   - - c_compiler_version
     - cxx_compiler_version

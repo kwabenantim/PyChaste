@@ -15,14 +15,10 @@ cxx_compiler_version:
   - "9"
 docker_image:
   - quay.io/condaforge/linux-anvil-cos7-x86_64
-pin_run_as_build:
-  xercesc:
-    min_pin: x
-    max_pin: x
 target_platform:
   - linux-64
 xercesc:
-  - "3"
+  - ">=3,<4"
 zip_keys:
   - - c_compiler_version
     - cxx_compiler_version
