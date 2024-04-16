@@ -9,15 +9,19 @@ package:
   version: {{ version }}
 
 source:
-  fn:  xsd-{{ version }}-x86_64-linux-gnu.tar.bz2
-  url: http://www.codesynthesis.com/download/xsd/{{ minor_version }}/linux-gnu/x86_64/xsd-{{ version }}-x86_64-linux-gnu.tar.bz2
-  sha256: d01060cbf4b3a1e462a5c5ad1a5a6773b541766dbbb98e50c9efb8f2a2dd55b7
+  fn:  xsd-{{ version }}.tar.bz2
+  url: http://www.codesynthesis.com/download/xsd/{{ minor_version }}/xsd-{{ version }}+dep.tar.bz2
+  sha256: eca52a9c8f52cdbe2ae4e364e4a909503493a0d51ea388fc6c9734565a859817
 
 build:
   number: {{ build }}
   string: {{ build_string }}
 
 requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - make
   host:
     - xerces-c
   run:
