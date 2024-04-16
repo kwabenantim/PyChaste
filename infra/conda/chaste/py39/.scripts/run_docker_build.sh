@@ -27,8 +27,8 @@ docker run --rm -it \
   -e BUILD_WITH_CONDA_DEBUG="${BUILD_WITH_CONDA_DEBUG}" \
   -e CPU_COUNT="${CPU_COUNT}" \
   -e HOST_USER_ID="${HOST_USER_ID}" \
-  -e CHASTE_GIT_BRANCH="${CHASTE_GIT_BRANCH}" \
-  -e PYCHASTE_GIT_BRANCH="${PYCHASTE_GIT_BRANCH}" \
+  -e CHASTE_GIT_REF="${CHASTE_GIT_REF}" \
+  -e PYCHASTE_GIT_REF="${PYCHASTE_GIT_REF}" \
   "${DOCKER_IMAGE}" \
   bash "/home/conda/feedstock_root/.scripts/build_steps.sh"
 

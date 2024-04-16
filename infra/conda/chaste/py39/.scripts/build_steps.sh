@@ -52,11 +52,11 @@ conda list --show-channel-urls
 
 /usr/bin/sudo -n yum install -y libXt-devel mesa-libGLU-devel patch
 
-CHASTE_GIT_BRANCH="${CHASTE_BRANCH:-develop}"
-PYCHASTE_GIT_BRANCH="${PYCHASTE_BRANCH:-develop}"
+CHASTE_GIT_REF="${CHASTE_BRANCH:-develop}"
+PYCHASTE_GIT_REF="${PYCHASTE_BRANCH:-develop}"
 
-git clone --recursive --branch ${CHASTE_GIT_BRANCH} --depth 1 https://github.com/Chaste/Chaste.git /tmp/Chaste
-git clone --recursive --branch ${PYCHASTE_GIT_BRANCH} --depth 1 https://github.com/Chaste/PyChaste.git /tmp/Chaste/projects/PyChaste
+git clone --recursive --branch ${CHASTE_GIT_REF} --depth 1 https://github.com/Chaste/Chaste.git /tmp/Chaste
+git clone --recursive --branch ${PYCHASTE_GIT_REF} --depth 1 https://github.com/Chaste/PyChaste.git /tmp/Chaste/projects/PyChaste
 
 mkdir -p /tmp/patches
 cp "${RECIPE_ROOT}"/patches/* /tmp/patches/
