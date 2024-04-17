@@ -1,2 +1,9 @@
 *.pyc
 build_artifacts
+.bash_history
+.bash_logout
+.bash_profile
+.bashrc
+.conda/
+.condarc
+
