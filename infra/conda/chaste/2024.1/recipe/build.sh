@@ -1,27 +1,21 @@
 #!/bin/bash
-
 set -ex
-
-BUILD_CONFIG=Release
 
 # Ignore PETSc MPICH version warning (4.1.* installed but expected 4.0.*)
 # because PETSc already accepted MPICH version during conda solve
 cd ${PREFIX}/include
 patch -t -p1 < /tmp/patches/petsc.patch
 
-cd ${PREFIX}/lib/cmake/vtk-7.1
-patch -t -p1 < /tmp/patches/vtk.patch
+cd ${PREFIX}
+mkdir build
+cd build || exit
 
 # Modify pip environment for chaste_codegen
 export PIP_NO_DEPENDENCIES="False"
 export PIP_NO_INDEX="False"
 
-cd ${PREFIX}
-mkdir build
-cd build || exit
-
 cmake \
-  -DCMAKE_BUILD_TYPE=${BUILD_CONFIG} \
+  -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_LIBRARY_PATH="${PREFIX}/lib" \
   -DCMAKE_PREFIX_PATH="${PREFIX}" \
   -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
@@ -39,9 +33,8 @@ cmake \
 export PIP_NO_DEPENDENCIES="True"
 export PIP_NO_INDEX="True"
 
-make chaste_project_PyChaste -j${CPU_COUNT}
-make project_PyChaste_Python -j${CPU_COUNT}
-#make install -j${CPU_COUNT}
+make chaste_project_PyChaste -j ${CPU_COUNT}
+make project_PyChaste_Python -j ${CPU_COUNT}
 
 cd projects/PyChaste/python
 pip install . --prefix=${PREFIX}
