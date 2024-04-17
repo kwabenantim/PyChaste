@@ -1,8 +1,7 @@
 {% set version = "7.1.1" %}
-{% set build = 0 %}
-
 {% set minor_version = ".".join(version.split(".")[:2]) %}
 
+{% set build = 0 %}
 {% set build_string = "py{}h{}_{}".format(CONDA_PY, PKG_HASH, build) %}
 
 package:
@@ -11,7 +10,6 @@ package:
 
 source:
   url: http://www.vtk.org/files/release/{{ minor_version }}/VTK-{{ version }}.tar.gz
-  fn:  VTK-{{ version }}.tar.gz
   sha256: 2d5cdd048540144d821715c718932591418bb48f5b6bb19becdae62339efa75a
   patches:
     - patches/vtk7.1.1.patch
@@ -50,53 +48,53 @@ requirements:
     - {{ cdt('mesa-libgbm') }}
 
   host:
-    - python
-    - zlib
-    - freetype
-    - libxml2
-    - libpng
-    - jpeg
-    - libtiff
-    - jsoncpp
-    - expat
-    - glew
     - boost-cpp
+    - expat
+    - freetype
+    - glew
     - hdf5
     - hdf5 * mpi_mpich*
+    - jpeg
+    - jsoncpp
+    - libpng
+    - libtiff
+    - libxml2
     - metis
     - mpich
     - mpi4py
     - parmetis
     - petsc
     - petsc4py
+    - python
     - sundials
     - xerces-c
-    - xsd 4.*
+    - xsd
+    - zlib
 
   run:
-    - python
-    - future
-    - zlib
-    - freetype
-    - libxml2
-    - libpng
-    - jpeg
-    - libtiff
-    - jsoncpp
-    - expat
-    - glew
     - boost-cpp
+    - expat
+    - freetype
+    - future
+    - glew
     - hdf5
     - hdf5 * mpi_mpich*
+    - jpeg
+    - jsoncpp
+    - libpng
+    - libtiff
+    - libxml2
     - metis
     - mpich
     - mpi4py
     - parmetis
     - petsc
     - petsc4py
+    - python
     - sundials
     - xerces-c
-    - xsd 4.*
+    - xsd
+    - zlib
 
 test:
   imports:

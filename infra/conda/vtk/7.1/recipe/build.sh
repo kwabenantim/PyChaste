@@ -1,17 +1,15 @@
 #!/bin/bash
 set -ex
 
-BUILD_CONFIG=Release
-
 mkdir build
 cd build || exit
 
 export CFLAGS="${CFLAGS} -isystem ${PREFIX}/lib/python${PY_VER}/site-packages/mpi4py/include"
 export CXXFLAGS="${CXXFLAGS} -isystem ${PREFIX}/lib/python${PY_VER}/site-packages/mpi4py/include"
 
-cmake .. \
+cmake \
     -Wno-dev \
-    -DCMAKE_BUILD_TYPE=$BUILD_CONFIG \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_PREFIX_PATH:PATH="${PREFIX}" \
     -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX}" \
     -DCMAKE_INSTALL_RPATH:PATH="${PREFIX}/lib" \
@@ -24,8 +22,8 @@ cmake .. \
     -DVTK_PYTHON_VERSION:STRING="${PY_VER}" \
     -DVTK_INSTALL_PYTHON_MODULE_DIR:PATH="${SP_DIR}" \
     -DVTK_HAS_FEENABLEEXCEPT:BOOL=OFF \
-    -DVTK_RENDERING_BACKEND=OpenGL2 \
-    -DModule_vtkRenderingMatplotlib=ON \
+    -DVTK_RENDERING_BACKEND:STRING=OpenGL2 \
+    -DModule_vtkRenderingMatplotlib:BOOL=ON \
     -DVTK_USE_SYSTEM_ZLIB:BOOL=ON \
     -DVTK_USE_SYSTEM_FREETYPE:BOOL=ON \
     -DVTK_USE_SYSTEM_LIBXML2:BOOL=ON \
@@ -36,9 +34,10 @@ cmake .. \
     -DVTK_USE_SYSTEM_HDF5:BOOL=ON \
     -DVTK_USE_SYSTEM_JSONCPP:BOOL=ON \
     -DVTK_USE_X:BOOL=ON \
-    -DVTK_USE_CXX11_FEATURES=ON \
-    -DVTK_Group_MPI=ON \
-    -DMPIEXEC="${PREFIX}/bin/mpiexec"
+    -DVTK_USE_CXX11_FEATURES:BOOL=ON \
+    -DVTK_Group_MPI:BOOL=ON \
+    -DMPIEXEC="${PREFIX}/bin/mpiexec" \
+    ..
 
 make -j ${CPU_COUNT}
 make install
