@@ -24,7 +24,7 @@ RUN apt-get update && \
     rm -rf /tmp/*
 
 USER $MAMBA_USER
-RUN micromamba install -y -n base -c pychaste -c conda-forge -c bioconda chaste boost-cpp=1.74 jupyterlab && \
+RUN micromamba install -y -n base -c pychaste -c conda-forge chaste jupyterlab && \
     micromamba clean --all --yes && \
     rm -rf $HOME/micromamba/pkgs/* && \
     rm -rf /opt/conda/pkgs/*
