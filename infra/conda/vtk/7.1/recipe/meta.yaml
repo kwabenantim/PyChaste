@@ -59,16 +59,8 @@ requirements:
     - libpng
     - libtiff
     - libxml2
-    - metis
     - mpich
-    - mpi4py
-    - parmetis
-    - petsc
-    - petsc4py
     - python
-    - sundials
-    - xerces-c
-    - xsd
     - zlib
 
   run:
@@ -84,16 +76,8 @@ requirements:
     - libpng
     - libtiff
     - libxml2
-    - metis
     - mpich
-    - mpi4py
-    - parmetis
-    - petsc
-    - petsc4py
     - python
-    - sundials
-    - xerces-c
-    - xsd
     - zlib
 
 test:
