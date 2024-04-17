@@ -24,9 +24,9 @@ requirements:
     - {{ compiler('cxx') }}
     - make
   host:
-    - xerces-c
+    - xerces-c >=3
   run:
-    - xerces-c
+    - xerces-c >=3
 
 test:
   commands:
