@@ -1,64 +1,60 @@
+boostcpp:
+  - ">=1.68,<1.76"
 cdt_name:
-- cos7
+  - cos7
 channel_sources:
-- pychaste
-- conda-forge
-- bioconda
+  - pychaste
+  - conda-forge
 channel_targets:
-- pychaste main
+  - pychaste main
 cxx_compiler:
-- gxx
+  - gxx
 cxx_compiler_version:
-- '11'
+  - "11"
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+  - quay.io/condaforge/linux-anvil-cos7-x86_64
+expat:
+  - "2"
 fortran_compiler:
-- gfortran
+  - gfortran
 fortran_compiler_version:
-- '11'
+  - "11"
+freetype:
+  - "2"
+hdf5:
+  - ">=1.10,<1.14"
+jpeg:
+  - "9"
+jsoncpp:
+  - "1.9"
+libpng:
+  - "1.6"
+libtiff:
+  - "4"
+libxml2:
+  - "2"
+metis:
+  - ">=4"
+mpich:
+  - ">=3"
+parmetis:
+  - ">=4"
+petsc:
+  - ">=3.8,<3.19"
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
-target_platform:
-- linux-64
-zip_keys:
-- - cxx_compiler_version
-  - fortran_compiler_version
-
-boostcpp:
-- '>=1.68,<1.76'
-expat:
-- '2'
-freetype:
-- '2'
-hdf5:
-- '>=1.10,<1.11'
-jsoncpp:
-- '1.9'
-jpeg:
-- '9'
-libpng:
-- '1.6'
-libtiff:
-- '4'
-libxml2:
-- '2'
-metis:
-- '>=4'
-mpich:
-- '>=3'
-parmetis:
-- '>=4'
-petsc:
-- '>=3.12,<3.17'
+  - 3.10.* *_cpython
 sundials:
-- '>=3.0,<6.0'
-vtk:
-- 7.1.1
+  - ">=3.0,<6.0"
+target_platform:
+  - linux-64
 xercesc:
-- '>=3'
+  - ">=3"
+zip_keys:
+  - - cxx_compiler_version
+    - fortran_compiler_version
 zlib:
-- '1'
+  - "1"

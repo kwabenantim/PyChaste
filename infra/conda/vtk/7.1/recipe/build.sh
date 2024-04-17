@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -ex
 
 BUILD_CONFIG=Release
@@ -41,7 +40,7 @@ cmake .. \
     -DVTK_Group_MPI=ON \
     -DMPIEXEC="${PREFIX}/bin/mpiexec"
 
-make -j${CPU_COUNT}
+make -j ${CPU_COUNT}
 make install
 
 # The egg-info file is necessary because some packages,
