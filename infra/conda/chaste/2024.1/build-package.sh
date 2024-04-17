@@ -92,9 +92,5 @@ conda list --show-channel-urls
 git clone --recursive --branch 2024.1 --depth 1 https://github.com/Chaste/Chaste.git /tmp/Chaste
 git clone --recursive --branch 2024.1 --depth 1 https://github.com/Chaste/PyChaste.git /tmp/Chaste/projects/PyChaste
 
-# Copy extra patches
-mkdir -p /tmp/patches
-cp "${RECIPE_ROOT}"/patches/* /tmp/patches/
-
 # Build conda package
 conda mambabuild "${RECIPE_ROOT}" --variant-config-files "${CONFIG_FILE}"

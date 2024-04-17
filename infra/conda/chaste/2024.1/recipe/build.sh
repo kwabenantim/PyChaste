@@ -1,11 +1,6 @@
 #!/bin/bash
 set -ex
 
-# Ignore PETSc MPICH version warning (4.1.* installed but expected 4.0.*)
-# because PETSc already accepted MPICH version during conda solve
-cd ${PREFIX}/include
-patch -t -p1 < /tmp/patches/petsc.patch
-
 cd ${PREFIX}
 mkdir build
 cd build || exit
