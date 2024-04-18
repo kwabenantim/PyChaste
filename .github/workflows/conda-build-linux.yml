@@ -2,23 +2,34 @@ name: conda-build-linux
 
 on:
   workflow_dispatch:
+    inputs:
+      variant:
+        description: "Variant of the conda package to build"
+        required: true
+        type: string
+        default: "linux_64_python3.10_cpython"
 
 jobs:
-  
   build:
-  
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
+      - name: checkout
+        uses: actions/checkout@v4
 
-    - name: build conda package
-      run: ./build-py310.sh
-      working-directory: infra/conda/chaste
-      
-    - name: upload conda package artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: pychaste-conda
-        path: infra/conda/chaste/build_artifacts/linux-64
+      - name: build conda package
+        run: |
+          docker run -it --rm \
+            -v $(pwd):/home/conda \
+            -e HOST_USER_ID="$(id -u)" \
+            quay.io/condaforge/linux-anvil-cos7-x86_64 \
+            ./build-package.sh \
+              --variant=${{ github.event.inputs.variant }} \
+              --parallel=$(nproc)
+        working-directory: infra/conda/chaste
+
+      - name: upload conda package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pychaste-conda
+          path: infra/conda/chaste/build_artifacts/linux-64
