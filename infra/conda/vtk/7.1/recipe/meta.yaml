@@ -59,6 +59,7 @@ requirements:
     - libpng
     - libtiff
     - libxml2
+    - mpi4py
     - mpich
     - python
     - zlib
@@ -76,6 +77,7 @@ requirements:
     - libpng
     - libtiff
     - libxml2
+    - mpi4py
     - mpich
     - python
     - zlib

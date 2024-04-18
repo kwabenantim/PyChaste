@@ -40,6 +40,11 @@ cmake \
     ..
 
 make -j ${CPU_COUNT}
+
+# Relax CMAKE_CXX_STANDARD for external projects
+sed -i.bak '/set(CMAKE_CXX_STANDARD 11)/d' ./CMakeFiles/VTKConfig.cmake
+sed -i.bak '/set(CMAKE_CXX_STANDARD_REQUIRED 11)/d' ./CMakeFiles/VTKConfig.cmake
+
 make install
 
 # The egg-info file is necessary because some packages,
