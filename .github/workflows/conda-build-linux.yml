@@ -19,11 +19,8 @@ jobs:
 
       - name: build conda package
         run: |
-          docker run -it --rm \
-            -v $(pwd):/home/conda \
-            -e HOST_USER_ID="$(id -u)" \
-            quay.io/condaforge/linux-anvil-cos7-x86_64 \
-            ./build-package.sh \
+          docker run -e HOST_USER_ID="$(id -u)" -v $(pwd):/home/conda \
+            quay.io/condaforge/linux-anvil-cos7-x86_64 ./build-package.sh \
               --variant=${{ github.event.inputs.variant }} \
               --parallel=$(nproc)
         working-directory: infra/conda/chaste
