@@ -45,6 +45,9 @@ make -j ${CPU_COUNT}
 sed -i.bak '/set(CMAKE_CXX_STANDARD 11)/d' ./CMakeFiles/VTKConfig.cmake
 sed -i.bak '/set(CMAKE_CXX_STANDARD_REQUIRED 11)/d' ./CMakeFiles/VTKConfig.cmake
 
+# Fix rpaths
+sed -i.bak -E 's|;[^;]*/_build_env/[^;]*/lib/|;|g' ./CMakeFiles/VTKTargets.cmake
+
 make install
 
 # The egg-info file is necessary because some packages,
