@@ -1,5 +1,5 @@
 boostcpp:
-  - ">=1.68,<1.76"
+  - "1.74"
 cdt_name:
   - cos7
 channel_sources:
@@ -28,7 +28,19 @@ parmetis:
 petsc:
   - ">=3.12,<3.19"
 pin_run_as_build:
+  boostcpp:
+    min_pin: x.x
+    max_pin: x.x
+  petsc:
+    min_pin: x.x
+    max_pin: x.x
   python:
+    min_pin: x.x
+    max_pin: x.x
+  sundials:
+    min_pin: x.x
+    max_pin: x.x
+  vtk:
     min_pin: x.x
     max_pin: x.x
 python:

@@ -46,7 +46,7 @@ sed -i.bak '/set(CMAKE_CXX_STANDARD 11)/d' ./CMakeFiles/VTKConfig.cmake
 sed -i.bak '/set(CMAKE_CXX_STANDARD_REQUIRED 11)/d' ./CMakeFiles/VTKConfig.cmake
 
 # Fix rpaths
-sed -i.bak -E 's|;[^;]*/_build_env/[^;]*/lib/|;|g' ./CMakeFiles/VTKTargets.cmake
+sed -i.bak -E 's|;[^;]*/_build_env/[^;]*/lib/|;|g' ./CMakeFiles/Export/*/VTKTargets.cmake
 
 make install
 
