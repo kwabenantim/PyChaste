@@ -1,6 +1,7 @@
 visualization/TestVtkSceneWithCaBased.hpp
 visualization/TestVtkSceneWithMeshBased.hpp
 visualization/TestVtkSceneWithPottsBased.hpp
+python/TestImports.py
 python/core/TestOutputFileHandlerPython.py
 python/core/TestFileFinderPython.py
 python/core/TestTimerPython.py
