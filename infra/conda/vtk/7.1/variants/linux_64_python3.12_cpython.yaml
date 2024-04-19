@@ -1,5 +1,5 @@
 boostcpp:
-  - ">=1.68,<1.76"
+  - "1.78"
 cdt_name:
   - cos7
 channel_sources:
@@ -14,15 +14,15 @@ cxx_compiler_version:
 docker_image:
   - quay.io/condaforge/linux-anvil-cos7-x86_64
 expat:
-  - "2"
+  - "2.6"
 fortran_compiler:
   - gfortran
 fortran_compiler_version:
   - "11"
 freetype:
-  - "2"
+  - "2.12"
 hdf5:
-  - ">=1.10,<1.14"
+  - "1.12"
 jpeg:
   - "9"
 jsoncpp:
@@ -30,11 +30,13 @@ jsoncpp:
 libpng:
   - "1.6"
 libtiff:
-  - "4"
+  - "4.5"
 libxml2:
   - "2"
 mpich:
-  - ">=3"
+  - "4"
+petsc:
+  - "3.18"
 pin_run_as_build:
   python:
     min_pin: x.x

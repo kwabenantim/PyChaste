@@ -1,5 +1,5 @@
 boostcpp:
-  - "1.68"
+  - "1.74"
 cdt_name:
   - cos7
 channel_sources:
