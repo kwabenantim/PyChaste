@@ -1,6 +1,7 @@
 # No shared libraries and compiled Python
 *.so
 *.pyc
+__pycache__/
 # No eclipse settings
 *.project
 *.cproject
