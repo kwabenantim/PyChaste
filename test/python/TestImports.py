@@ -166,6 +166,23 @@ class TestImports(unittest.TestCase):
         chaste.init()
 
         import chaste.pde
+        from chaste.pde import (
+            AbstractBoundaryCondition2,
+            AbstractBoundaryCondition3,
+            AbstractLinearEllipticPde2_2,
+            AbstractLinearEllipticPde3_3,
+            AbstractLinearParabolicPde2_2,
+            AbstractLinearParabolicPde3_3,
+            AbstractLinearParabolicPdeSystemForCoupledOdeSystem2_2_1,
+            AbstractLinearParabolicPdeSystemForCoupledOdeSystem3_3_1,
+            AbstractLinearPde2_2,
+            AbstractLinearPde3_3,
+            AbstractNonlinearEllipticPde2,
+            AbstractNonlinearEllipticPde3,
+            ConstBoundaryCondition2,
+            ConstBoundaryCondition3,
+            PdeSimulationTime,
+        )
 
     def test_visualization_imports(self):
         import chaste
