@@ -23,7 +23,7 @@ jobs:
             quay.io/condaforge/linux-anvil-cos7-x86_64 ./build-package.sh \
               --variant=${{ github.event.inputs.variant }} \
               --parallel=$(nproc)
-        working-directory: infra/conda/chaste
+        working-directory: infra/conda/chaste/2024.1
 
       - name: upload conda package artifacts
         uses: actions/upload-artifact@v4
