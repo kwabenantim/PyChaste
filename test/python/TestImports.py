@@ -34,18 +34,20 @@ import unittest
 
 
 class TestImports(unittest.TestCase):
-    def test_imports(self):
+
+    def test_cell_based_imports(self):
+        import chaste
+
+        chaste.init()
+
+        import chaste.cell_based
+
+    def test_core_imports(self):
         import chaste
 
         chaste.init()
 
         import chaste.core
-        import chaste.mesh
-        import chaste.ode
-        import chaste.pde
-        import chaste.cell_based
-        import chaste.visualization
-
         from chaste.core import (
             ChasteBuildInfo,
             FileFinder,
@@ -60,6 +62,12 @@ class TestImports(unittest.TestCase):
             TimeStepper,
         )
 
+    def test_mesh_imports(self):
+        import chaste
+
+        chaste.init()
+
+        import chaste.mesh
         from chaste.mesh import (
             AbstractChasteRegion2,
             AbstractChasteRegion3,
@@ -133,6 +141,38 @@ class TestImports(unittest.TestCase):
             VertexMesh3_3,
             VoronoiVertexMeshGenerator,
         )
+
+    def test_ode_imports(self):
+        import chaste
+
+        chaste.init()
+
+        import chaste.ode
+        from chaste.ode import (
+            AbstractOdeSystem,
+            AbstractOdeSystemInformation,
+            AbstractPythonOdeSystemInformation,
+            Alarcon2004OxygenBasedCellCycleOdeSystem,
+            DeltaNotchEdgeOdeSystem,
+            DeltaNotchInteriorOdeSystem,
+            DeltaNotchOdeSystem,
+            Goldbeter1991OdeSystem,
+            TysonNovak2001OdeSystem,
+        )
+
+    def test_pde_imports(self):
+        import chaste
+
+        chaste.init()
+
+        import chaste.pde
+
+    def test_visualization_imports(self):
+        import chaste
+
+        chaste.init()
+
+        import chaste.visualization
 
 
 if __name__ == "__main__":
