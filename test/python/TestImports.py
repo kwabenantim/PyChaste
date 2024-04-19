@@ -190,6 +190,15 @@ class TestImports(unittest.TestCase):
         chaste.init()
 
         import chaste.visualization
+        from chaste.visualization import (
+            AbstractPyChasteActorGenerator2,
+            AbstractPyChasteActorGenerator3,
+            CellPopulationPyChasteActorGenerator2,
+            CellPopulationPyChasteActorGenerator3,
+            JupyterNotebookManager,
+            VtkScene2,
+            VtkScene3,
+        )
 
 
 if __name__ == "__main__":
