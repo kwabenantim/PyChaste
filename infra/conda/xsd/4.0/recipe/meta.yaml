@@ -1,0 +1,37 @@
+{% set version = "4.0.0" %}
+{% set minor_version = ".".join(version.split(".")[:2]) %}
+
+{% set build = 0 %}
+{% set build_string = "h{}_{}".format(PKG_HASH, build) %}
+
+package:
+  name: xsd
+  version: {{ version }}
+
+source:
+  url: http://www.codesynthesis.com/download/xsd/{{ minor_version }}/xsd-{{ version }}+dep.tar.bz2
+  sha256: eca52a9c8f52cdbe2ae4e364e4a909503493a0d51ea388fc6c9734565a859817
+  patches:
+    - patches/xsd-4.0.0.patch
+
+build:
+  number: {{ build }}
+  string: {{ build_string }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - make
+  host:
+    - xerces-c >=3
+  run:
+    - xerces-c >=3
+
+test:
+  commands:
+    - xsd --version
+
+about:
+  home: http://www.codesynthesis.com/products/xsd/
+  license: GPL 2.0 with FLOSS Exception

@@ -9,6 +9,11 @@ jobs:
   test-conda:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
     steps:
       - name: install dependencies
         run: |
@@ -22,9 +27,9 @@ jobs:
           use-mamba: true
           miniforge-variant: Mambaforge
           miniforge-version: latest
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
           activate-environment: pychaste_test
-          channels: pychaste,conda-forge,bioconda
+          channels: pychaste,conda-forge
 
       - name: install pychaste
         run: mamba install -n pychaste_test -y chaste
