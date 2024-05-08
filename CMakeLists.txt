@@ -52,8 +52,6 @@ else()
         vtkInteractionStyle
         vtkIOImage
         vtkIOMovie
-        vtkParallelCore
-        vtkParallelMPI
         vtkRenderingAnnotation
         vtkRenderingCore
         vtkRenderingFreeType
