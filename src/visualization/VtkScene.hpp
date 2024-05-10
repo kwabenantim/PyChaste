@@ -41,8 +41,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkVersion.h>
 #include <vtkOggTheoraWriter.h>
 #include <vtkAutoInit.h>
-VTK_MODULE_INIT(vtkRenderingOpenGL2);
-VTK_MODULE_INIT(vtkRenderingFreeType);
+#if VTK_MAJOR_VERSION >= 6
+#   include <vtkAutoInit.h>
+#   if VTK_MAJOR_VERSION == 6
+        VTK_MODULE_INIT(vtkRenderingOpenGL);
+#   else
+        VTK_MODULE_INIT(vtkRenderingOpenGL2);
+#   endif
+    VTK_MODULE_INIT(vtkRenderingFreeType);
+#endif
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
