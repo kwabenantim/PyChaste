@@ -70,6 +70,14 @@ jobs:
           cache-environment: true
           post-cleanup: 'all'
 
+      - name: fix cmake paths
+        run: |
+          find $CONDA_PREFIX \
+            -type f \
+            -name '*.cmake' \
+            -exec sed -i.bak 's|/usr/lib64/libXext.so|libXext.so|g' {} \;
+          shell: bash -el {0}
+
       - name: make build directory
         run: |
           mkdir -p build
