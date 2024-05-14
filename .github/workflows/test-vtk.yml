@@ -50,6 +50,8 @@ jobs:
               - pychaste
           environment-name: test-env
           create-args: >-
+            -c conda-forge
+            -c pychaste
             boost-cpp
             hdf5="*=*mpi_mpich*"
             metis
