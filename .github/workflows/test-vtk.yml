@@ -15,10 +15,6 @@ jobs:
       matrix:
         vtk-version: ["8.2", "9.2"]
 
-    defaults:
-      run:
-        shell: bash -el {0}
-
     steps:
       - name: checkout chaste
         uses: actions/checkout@v4
@@ -43,6 +39,7 @@ jobs:
         uses: mamba-org/setup-micromamba@v1
         with:
           micromamba-version: latest
+          generate-run-shell: false
           init-shell: bash
           condarc: |
             channels:
@@ -50,10 +47,8 @@ jobs:
               - pychaste
           environment-name: test-env
           create-args: >-
-            -c conda-forge
-            -c pychaste
             boost-cpp
-            'hdf5=[build=*mpi_mpich*]'
+            hdf5=[build=*mpi_mpich*]
             metis
             mpich
             notebook
@@ -65,7 +60,7 @@ jobs:
             six
             sundials
             tbb-devel
-            vtk="${{ matrix.vtk-version }}"
+            vtk=${{ matrix.vtk-version }}
             wheel
             xerces-c
             xsd
@@ -98,21 +93,25 @@ jobs:
             -DXSD_EXECUTABLE="${CONDA_PREFIX}/bin/xsd" \
             ../Chaste/
         working-directory: build
+        shell: bash -el {0}
 
       - name: build pychaste
         run: |
           cmake --build . --parallel $(nproc) --target project_PyChaste
         working-directory: build
+        shell: bash -el {0}
 
       - name: build pychaste python module
         run: |
           cmake --build . --parallel $(nproc) --target project_PyChaste_Python
         working-directory: build
+        shell: bash -el {0}
 
       - name: install pychaste
         run: |
           pip install .
         working-directory: build/projects/PyChaste/python
+        shell: bash -el {0}
 
       - name: run tests
         run: |
@@ -120,3 +119,4 @@ jobs:
             --server-args="-screen 0 1024x768x24" \
             ctest -j $(nproc) -L PyChaste --output-on-failure
         working-directory: build
+        shell: bash -el {0}
