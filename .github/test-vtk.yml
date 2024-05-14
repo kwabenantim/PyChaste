@@ -1,0 +1,116 @@
+name: test-vtk
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  test-conda:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        vtk-version: ["8.2", "9.2"]
+
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - name: checkout chaste
+        uses: actions/checkout@v4
+        with:
+          repository: Chaste/Chaste
+          ref: develop
+          path: Chaste
+          submodules: recursive
+
+      - name: checkout pychaste
+        uses: actions/checkout@v4
+        with:
+          path: Chaste/projects/PyChaste
+          submodules: recursive
+
+      - name: install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ xvfb
+
+      - name: setup conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          use-mamba: true
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          channels: pychaste,conda-forge
+
+      - name: install pychaste conda dependencies
+        run: |
+          mamba install -n test \
+            boost-cpp \
+            hdf5="*=*mpi_mpich*" \
+            metis \
+            mpich \
+            notebook \
+            parmetis \
+            petsc \
+            petsc4py \
+            six \
+            sundials \
+            vtk=${{ matrix.vtk-version }} \
+            tbb-devel \
+            xerces-c \
+            xsd \
+            xvfbwrapper \
+            xorg-libxext
+
+      - name: make build directory
+        run: |
+          mkdir -p build
+
+      - name: configure pychaste
+        run: |
+          export PETSC_DIR=$CONDA_PREFIX
+          export HDF5_ROOT=$CONDA_PREFIX
+
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DPython3_EXECUTABLE=$(which python) \
+            -DCMAKE_LIBRARY_PATH="${CONDA_PREFIX}/lib" \
+            -DCMAKE_PREFIX_PATH="${CONDA_PREFIX}" \
+            -DCMAKE_INSTALL_PREFIX="${CONDA_PREFIX}" \
+            -DBUILD_SHARED_LIBS=ON \
+            -DBOOST_ROOT="${CONDA_PREFIX}" \
+            -DHDF5_C_COMPILER_EXECUTABLE="${CONDA_PREFIX}/bin/h5pcc" \
+            -DVTK_DIR=${CONDA_PREFIX} \
+            -DXERCESC_INCLUDE="${CONDA_PREFIX}/include" \
+            -DXERCESC_LIBRARY="${CONDA_PREFIX}/lib/libxerces-c.so" \
+            -DXSD_EXECUTABLE="${CONDA_PREFIX}/bin/xsd" \
+            ../Chaste/
+        working-directory: build
+
+      - name: build pychaste
+        run: |
+          cmake --build . --parallel $(nproc) --target project_PyChaste
+        working-directory: build
+
+      - name: build pychaste python module
+        run: |
+          cmake --build . --parallel $(nproc) --target project_PyChaste_Python
+        working-directory: build
+
+      - name: install pychaste
+        run: |
+          pip install .
+        working-directory: build/projects/PyChaste/python
+
+      - name: run tests
+        run: |
+          xvfb-run \
+            --server-args="-screen 0 1024x768x24" \
+            ctest -j $(nproc) -L PyChaste --output-on-failure
+        working-directory: build
