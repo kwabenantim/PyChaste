@@ -42,6 +42,7 @@ if(VTK_MAJOR_VERSION LESS_EQUAL 6)
         vtkRenderingCore
         vtkRenderingFreeType
         vtkRenderingOpenGL
+        vtkWrappingPythonCore
     )
 else()
     find_package(VTK REQUIRED COMPONENTS
@@ -54,6 +55,7 @@ else()
         vtkRenderingCore
         vtkRenderingFreeType
         vtkRenderingOpenGL2
+        vtkWrappingPythonCore
     )
 endif()
 
