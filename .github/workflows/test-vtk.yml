@@ -53,7 +53,7 @@ jobs:
             -c conda-forge
             -c pychaste
             boost-cpp
-            hdf5="*=*mpi_mpich*"
+            'hdf5=[build=*mpi_mpich*]'
             metis
             mpich
             notebook
@@ -65,7 +65,7 @@ jobs:
             six
             sundials
             tbb-devel
-            vtk=${{ matrix.vtk-version }}
+            vtk="${{ matrix.vtk-version }}"
             wheel
             xerces-c
             xsd
