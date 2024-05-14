@@ -71,7 +71,7 @@ jobs:
             xsd
             xvfbwrapper
             xorg-libxext
-          cache-downloads: true
+          cache-environment: true
           post-cleanup: 'all'
 
       - name: make build directory
