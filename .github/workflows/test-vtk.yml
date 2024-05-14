@@ -48,6 +48,7 @@ jobs:
           environment-name: test-env
           create-args: >-
             boost-cpp
+            fftw
             hdf5=[build=*mpi_mpich*]
             metis
             mpich
