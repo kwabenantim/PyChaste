@@ -39,34 +39,37 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake g++ xvfb
 
-      - name: setup conda
-        uses: conda-incubator/setup-miniconda@v3
+      - name: setup conda environment
+        uses: mamba-org/setup-micromamba@v1
         with:
-          auto-update-conda: true
-          use-mamba: true
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
-          channels: pychaste,conda-forge
-
-      - name: install pychaste conda dependencies
-        run: |
-          mamba install -n test \
-            boost-cpp \
-            hdf5="*=*mpi_mpich*" \
-            metis \
-            mpich \
-            notebook \
-            parmetis \
-            petsc \
-            petsc4py \
-            six \
-            sundials \
-            vtk=${{ matrix.vtk-version }} \
-            tbb-devel \
-            xerces-c \
-            xsd \
-            xvfbwrapper \
+          micromamba-version: latest
+          condarc: |
+            channels:
+              - conda-forge
+              - pychaste
+          create-args: >-
+            boost-cpp
+            hdf5="*=*mpi_mpich*"
+            metis
+            mpich
+            notebook
+            parmetis
+            petsc
+            petsc4py
+            pip
+            setuptools
+            six
+            sundials
+            tbb-devel
+            vtk=${{ matrix.vtk-version }}
+            wheel
+            xerces-c
+            xsd
+            xvfbwrapper
             xorg-libxext
+          init-shell: bash
+          cache-environment: true
+          post-cleanup: 'all'
 
       - name: make build directory
         run: |
