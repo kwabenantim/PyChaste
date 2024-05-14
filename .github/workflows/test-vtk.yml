@@ -48,6 +48,7 @@ jobs:
             channels:
               - conda-forge
               - pychaste
+          environment-name: test-env
           create-args: >-
             boost-cpp
             hdf5="*=*mpi_mpich*"
