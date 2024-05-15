@@ -50,9 +50,11 @@ jobs:
             boost-cpp
             fftw
             hdf5=[build=*mpi_mpich*]
+            matplotlib
             metis
             mpich
             notebook
+            numpy
             parmetis
             petsc
             petsc4py
