@@ -46,13 +46,15 @@ if(VTK_MAJOR_VERSION LESS 7)
     )
 elseif(VTK_MAJOR_VERSION LESS 9)
     find_package(VTK REQUIRED COMPONENTS
+        vtkFiltersProgrammable
+        vtkFiltersVerdict
         vtkInteractionStyle
         vtkIOImage
         vtkIOMovie
         vtkRenderingAnnotation
         vtkRenderingCore
         vtkRenderingFreeType
-        vtkRenderingOpenGL
+        vtkRenderingOpenGL2
         vtkWrappingPythonCore
     )
 else()
