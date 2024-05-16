@@ -99,11 +99,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         ## Setup the simulation environment in the notebook
 
-        SetupNotebookTest()
-
-        ## Set the start time for the simulation
-
-        SimulationTime.Instance().SetStartTime(0.0)
+        # JUPYTER_SETUP
 
         ## Next, we define the necessary geometry by generating a mesh to 
         ## contain a single cell.
@@ -212,7 +208,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         ## Reset the simulation environment in the notebook
 
-        TearDownNotebookTest()
+        # JUPYTER_TEARDOWN
 
     ## ### 2. Adding More Cells
 
@@ -222,11 +218,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         ## Setup the simulation environment in the notebook
 
-        SetupNotebookTest()
-
-        ## Set the start time for the simulation
-
-        SimulationTime.Instance().SetStartTime(0.0)
+        # JUPYTER_SETUP
 
         ## We can use the mesh generator to generate multiple cells. The first
         ## parameter of the mesh generator constructor controls the number of
@@ -335,7 +327,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         ## Reset the simulation environment in the notebook
 
-        TearDownNotebookTest()
+        # JUPYTER_TEARDOWN
 
     ## ### 3. Adding Fluid Sources
     ## Now that we are familiar with how to generate the cells, we will
@@ -347,11 +339,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
 
         ## Setup the simulation environment in the notebook
 
-        SetupNotebookTest()
-
-        ## Set the start time for the simulation
-
-        SimulationTime.Instance().SetStartTime(0.0)
+        # JUPYTER_SETUP
 
         ## We begin by constructing a fluid source object:
 
@@ -457,8 +445,7 @@ class TestImmersedBoundaryTutorial(AbstractCellBasedTestSuite):
         nb_manager.vtk_show(scene, height=300)
         
         ## Reset the simulation environment in the notebook
-
-        TearDownNotebookTest()
+        # JUPYTER_TEARDOWN
 
         ## #### Further Exercises
         ## * Try integrating a different cell cycle model to introduce cell
