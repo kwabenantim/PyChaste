@@ -34,6 +34,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <boost/lexical_cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
 #include <vtkPoints.h>
@@ -115,14 +116,14 @@ VtkScene<DIM>::VtkScene()
       mHasStarted(false),
       mAddAnnotations(false),
       mOutputFrequency(1),
-      mpCellPopulationGenerator(boost::shared_ptr<CellPopulationPyChasteActorGenerator<DIM> >(new CellPopulationPyChasteActorGenerator<DIM>()))
+      mpCellPopulationGenerator(boost::make_shared<CellPopulationPyChasteActorGenerator<DIM> >())
 {
     mpRenderer->SetBackground(1.0, 1.0, 1.0);
     mpRenderWindow->AddRenderer(mpRenderer);
     mpRenderWindow->SetSize(800.0, 600.0);
     mpRenderWindowInteractor->SetRenderWindow(mpRenderWindow);
 
-    vtkSmartPointer<customMouseInteractorStyle> style = vtkSmartPointer<customMouseInteractorStyle>::New();
+    auto style = vtkSmartPointer<customMouseInteractorStyle>::New();
     mpRenderWindowInteractor->SetInteractorStyle( style );
 }
 
@@ -186,7 +187,6 @@ void VtkScene<DIM>::ResetRenderer(unsigned time_step)
     {
         mpRenderer->RemoveActor(p_actor);
     }
-    mpRenderer->Clear();
 
     if(mpCellPopulationGenerator)
     {
@@ -269,9 +269,10 @@ void VtkScene<DIM>::Start()
         mpRenderWindow->SetOffScreenRendering(1);
     }
 
-    if(mSaveAsImages or mSaveAsAnimation)
+    if(mSaveAsImages || mSaveAsAnimation)
     {
         mpRenderWindow->SetOffScreenRendering(1);
+        mpRenderWindow->Render();
         mWindowToImageFilter->SetInput(mpRenderWindow);
         mWindowToImageFilter->Update();
     }

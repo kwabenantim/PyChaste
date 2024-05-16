@@ -60,7 +60,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/pybind11/include)
 
 add_subdirectory(dynamic/pybind11)
-include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${PYTHON3_INCLUDE_DIRS})
 
 ######### Build the Python modules ###################### 
 set (PYCHASTE_PYTHON_AUTO_MODULES "")
@@ -124,7 +124,7 @@ foreach(val RANGE ${len2})
         PREFIX "${PYTHON_MODULE_PREFIX}" SUFFIX ".so")
     target_compile_features(_chaste_project_PyChaste_${python_module} PRIVATE cxx_range_for)
     # order is important, pybind and python come first
-    target_link_libraries(_chaste_project_PyChaste_${python_module} pybind11::module ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PYCHASTE_SHARED_LIB})
+    target_link_libraries(_chaste_project_PyChaste_${python_module} pybind11::module ${PYTHON3_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PYCHASTE_SHARED_LIB})
     add_dependencies(_chaste_project_PyChaste_${python_module} chaste_project_PyChaste)
 endforeach()
 
