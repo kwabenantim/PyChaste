@@ -33,7 +33,18 @@
 find_package(Chaste COMPONENTS cell_based)
 
 # PyChaste needs some additional VTK libraries
-if(VTK_MAJOR_VERSION LESS_EQUAL 6)
+if(VTK_MAJOR_VERSION LESS 7)
+    find_package(VTK REQUIRED COMPONENTS
+        vtkInteractionStyle
+        vtkIOImage
+        vtkIOMovie
+        vtkRenderingAnnotation
+        vtkRenderingCore
+        vtkRenderingFreeType
+        vtkRenderingOpenGL
+        vtkWrappingPythonCore
+    )
+elseif(VTK_MAJOR_VERSION LESS 9)
     find_package(VTK REQUIRED COMPONENTS
         vtkInteractionStyle
         vtkIOImage
@@ -46,22 +57,25 @@ if(VTK_MAJOR_VERSION LESS_EQUAL 6)
     )
 else()
     find_package(VTK REQUIRED COMPONENTS
-        vtkFiltersProgrammable
-        vtkFiltersVerdict
-        vtkInteractionStyle
-        vtkIOImage
-        vtkIOMovie
-        vtkRenderingAnnotation
-        vtkRenderingCore
-        vtkRenderingFreeType
-        vtkRenderingOpenGL2
-        vtkWrappingPythonCore
+        FiltersProgrammable
+        FiltersVerdict
+        InteractionStyle
+        IOImage
+        IOMovie
+        RenderingAnnotation
+        RenderingCore
+        RenderingFreeType
+        RenderingOpenGL2
+        WrappingPythonCore
     )
 endif()
 
-list(APPEND Chaste_INCLUDES ${VTK_INCLUDE_DIRS})
-list(APPEND Chaste_project_PyChaste_INCLUDE_DIRS ${VTK_INCLUDE_DIRS})
-list(APPEND Chaste_THIRD_PARTY_LIBRARIES ${VTK_LIBRARIES})
+if (VTK_MAJOR_VERSION LESS 9)
+    list(APPEND Chaste_INCLUDES ${VTK_INCLUDE_DIRS})
+    list(APPEND Chaste_project_PyChaste_INCLUDE_DIRS ${VTK_INCLUDE_DIRS})
+    list(APPEND Chaste_THIRD_PARTY_LIBRARIES ${VTK_LIBRARIES})
+endif ()
+
 chaste_do_project(PyChaste)
 
 # Include the Python wrapping build logic

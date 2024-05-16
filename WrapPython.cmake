@@ -124,7 +124,7 @@ foreach(val RANGE ${len2})
         PREFIX "${PYTHON_MODULE_PREFIX}" SUFFIX ".so")
     target_compile_features(_chaste_project_PyChaste_${python_module} PRIVATE cxx_range_for)
     # order is important, pybind and python come first
-    target_link_libraries(_chaste_project_PyChaste_${python_module} pybind11::module ${PYTHON3_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PYCHASTE_SHARED_LIB})
+    target_link_libraries(_chaste_project_PyChaste_${python_module} pybind11::module ${PYTHON3_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PYCHASTE_SHARED_LIB} Chaste_COMMON_DEPS)
     add_dependencies(_chaste_project_PyChaste_${python_module} chaste_project_PyChaste)
 endforeach()
 
