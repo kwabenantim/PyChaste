@@ -324,17 +324,17 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddPottsBasedCellPopulationActor
             }
         }
 
-        vtkSmartPointer<vtkGeometryFilter> p_geometry_filter_pre =
-          vtkSmartPointer<vtkGeometryFilter>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_geometry_filter_pre->SetInput(p_potts_grid);
-        #else
-            p_geometry_filter_pre->SetInputData(p_potts_grid);
-        #endif
+        auto p_geometry_filter_pre = vtkSmartPointer<vtkGeometryFilter>::New();
+        p_geometry_filter_pre->SetInputData(p_potts_grid);
 
         vtkSmartPointer<vtkThreshold> p_threshold = vtkSmartPointer<vtkThreshold>::New();
         p_threshold->SetInputConnection(p_geometry_filter_pre->GetOutputPort());
+
+#if VTK_MAJOR_VERSION < 9
         p_threshold->ThresholdByUpper(0.0);
+#else
+        p_threshold->SetUpperThreshold(0.0);
+#endif
         p_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "Cell Id");
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
@@ -366,12 +366,16 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddPottsBasedCellPopulationActor
             for(unsigned idx=0; idx<p_potts_grid->GetNumberOfCells(); idx++)
             {
                 vtkSmartPointer<vtkThreshold> p_local_threshold = vtkSmartPointer<vtkThreshold>::New();
-                #if VTK_MAJOR_VERSION <= 5
-                    p_local_threshold->SetInput(p_geom_filter->GetOutput());
-                #else
-                    p_local_threshold->SetInputData(p_geom_filter->GetOutput());
-                #endif
-                p_local_threshold->ThresholdBetween(p_element_base_ids->GetTuple1(idx), p_element_base_ids->GetTuple1(idx));
+                p_local_threshold->SetInputData(p_geom_filter->GetOutput());
+
+#if VTK_MAJOR_VERSION < 9
+                p_local_threshold->ThresholdBetween(p_element_base_ids->GetTuple1(idx),
+                                                    p_element_base_ids->GetTuple1(idx));
+#else
+                p_threshold->SetLowerThreshold(p_element_base_ids->GetTuple1(idx));
+                p_threshold->SetUpperThreshold(p_element_base_ids->GetTuple1(idx));
+#endif
+
                 p_local_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "Cell Base Id");
 
                 vtkSmartPointer<vtkGeometryFilter> p_local_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
@@ -1110,12 +1114,12 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddMeshBasedCellPopulationActor(
         p_scaled_ctf->Build();
 
         vtkSmartPointer<vtkThreshold> p_threshold = vtkSmartPointer<vtkThreshold>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_threshold->SetInput(p_voronoi_grid);
-        #else
-            p_threshold->SetInputData(p_voronoi_grid);
-        #endif
+        p_threshold->SetInputData(p_voronoi_grid);
+#if VTK_MAJOR_VERSION < 9
         p_threshold->ThresholdByUpper(0.0);
+#else
+        p_threshold->SetUpperThreshold(0.0);
+#endif
         p_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "CellColors");
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
