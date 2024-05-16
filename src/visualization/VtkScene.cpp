@@ -187,7 +187,6 @@ void VtkScene<DIM>::ResetRenderer(unsigned time_step)
     {
         mpRenderer->RemoveActor(p_actor);
     }
-    mpRenderer->Clear();
 
     if(mpCellPopulationGenerator)
     {
