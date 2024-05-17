@@ -87,16 +87,15 @@ public:
         MAKE_PTR(TransitCellProliferativeType, p_transit_type);
         CellsGenerator<UniformCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasicRandom(cells, location_indices.size(), p_transit_type);
-        boost::shared_ptr<MeshBasedCellPopulationWithGhostNodes<2> > p_cell_population =
-                boost::shared_ptr<MeshBasedCellPopulationWithGhostNodes<2> >(new MeshBasedCellPopulationWithGhostNodes<2> (*p_mesh, cells, location_indices));
+        auto p_cell_population = boost::make_shared<MeshBasedCellPopulationWithGhostNodes<2> >(*p_mesh, cells, location_indices);
         p_cell_population->AddPopulationWriter<VoronoiDataWriter>();
 
-        boost::shared_ptr<VtkScene<2> > p_scene = boost::shared_ptr<VtkScene<2> >(new VtkScene<2>);
+        auto p_scene = boost::make_shared<VtkScene<2> >();
         p_scene->SetCellPopulation(p_cell_population);
         p_scene->SetSaveAsImages(true);
         p_scene->SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath()+"/cell_population");
 
-        boost::shared_ptr<VtkSceneModifier<2> > p_scene_modifier = boost::shared_ptr<VtkSceneModifier<2> >(new VtkSceneModifier<2>);
+        auto p_scene_modifier = boost::make_shared<VtkSceneModifier<2> >();
         p_scene_modifier->SetVtkScene(p_scene);
         p_scene->Start();
 
@@ -128,17 +127,16 @@ public:
         CellsGenerator<UniformCellCycleModel, 3> cells_generator;
         cells_generator.GenerateBasicRandom(cells, mesh.GetNumNodes(), p_transit_type);
 
-        boost::shared_ptr<MeshBasedCellPopulation<3> > p_cell_population =
-                boost::shared_ptr<MeshBasedCellPopulation<3> >(new MeshBasedCellPopulation<3> (mesh, cells));
+        auto p_cell_population = boost::make_shared<MeshBasedCellPopulation<3> >(mesh, cells);
         p_cell_population->SetAbsoluteMovementThreshold(DBL_MAX);
         p_cell_population->AddPopulationWriter<VoronoiDataWriter>();
 
-        boost::shared_ptr<VtkScene<3> > p_scene = boost::shared_ptr<VtkScene<3> >(new VtkScene<3>);
+        auto p_scene = boost::make_shared<VtkScene<3> >();
         p_scene->SetCellPopulation(p_cell_population);
         p_scene->SetSaveAsImages(true);
         p_scene->SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath()+"/cell_population");
 
-        boost::shared_ptr<VtkSceneModifier<3> > p_scene_modifier = boost::shared_ptr<VtkSceneModifier<3> >(new VtkSceneModifier<3>);
+        auto p_scene_modifier = boost::make_shared<VtkSceneModifier<3> >();
         p_scene_modifier->SetVtkScene(p_scene);
         p_scene->Start();
 
