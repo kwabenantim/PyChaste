@@ -160,11 +160,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddCaBasedCellPopulationActor(vt
         p_ca_image->SetOrigin(bounds[0], bounds[2], bounds[4]);
         p_ca_image->SetSpacing(spacing, spacing, spacing);
 
-        #if VTK_MAJOR_VERSION <= 5
-            p_geom_filter->SetInput(p_ca_image);
-        #else
-            p_geom_filter->SetInputData(p_ca_image);
-        #endif
+        p_geom_filter->SetInputData(p_ca_image);
 
         vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
         p_mapper->SetInputConnection(p_geom_filter->GetOutputPort());
@@ -386,23 +382,14 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddPottsBasedCellPopulationActor
                 p_features->Update();
 
                 vtkSmartPointer<vtkAppendPolyData> p_append = vtkSmartPointer<vtkAppendPolyData>::New();
-                #if VTK_MAJOR_VERSION <= 5
-                    p_append->AddInput(p_bounds);
-                    p_append->AddInput(p_features->GetOutput());
-                #else
-                    p_append->AddInputData(p_bounds);
-                    p_append->AddInputData(p_features->GetOutput());
-                #endif
+                p_append->AddInputData(p_bounds);
+                p_append->AddInputData(p_features->GetOutput());
                 p_append->Update();
                 p_bounds = p_append->GetOutput();
             }
 
             vtkSmartPointer<vtkPolyDataMapper> p_mapper2 = vtkSmartPointer<vtkPolyDataMapper>::New();
-            #if VTK_MAJOR_VERSION <= 5
-                p_mapper2->SetInput(p_bounds);
-            #else
-                p_mapper2->SetInputData(p_bounds);
-            #endif
+            p_mapper2->SetInputData(p_bounds);
 
             vtkSmartPointer<vtkActor> p_volume_actor2 = vtkSmartPointer<vtkActor>::New();
             p_volume_actor2->SetMapper(p_mapper2);
@@ -524,24 +511,15 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRend
         p_spheres->SetThetaResolution(16);
 
         vtkSmartPointer<vtkGlyph3D> p_glyph = vtkSmartPointer<vtkGlyph3D>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_glyph->SetInput(p_polydata);
-            p_glyph->SetSource(p_spheres->GetOutput());
-        #else
-            p_glyph->SetInputData(p_polydata);
-            p_glyph->SetSourceConnection(p_spheres->GetOutputPort());
-        #endif
+        p_glyph->SetInputData(p_polydata);
+        p_glyph->SetSourceConnection(p_spheres->GetOutputPort());
         p_glyph->ClampingOff();
         p_glyph->SetScaleModeToScaleByScalar();
         p_glyph->SetScaleFactor(1.0);
         p_glyph->Update();
 
         vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_mapper->SetInput(p_glyph->GetOutput());
-        #else
-            p_mapper->SetInputData(p_glyph->GetOutput());
-        #endif
+        p_mapper->SetInputData(p_glyph->GetOutput());
         p_mapper->SetLookupTable(p_scaled_ctf);
         p_mapper->ScalarVisibilityOn();
         p_mapper->SelectColorArray("CellColors");
@@ -720,11 +698,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddVertexBasedCellPopulationActo
         p_scaled_ctf->Build();
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_geom_filter->SetInput(p_voronoi_grid);
-        #else
-            p_geom_filter->SetInputData(p_voronoi_grid);
-        #endif
+        p_geom_filter->SetInputData(p_voronoi_grid);
 
         vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
         p_mapper->SetInputConnection(p_geom_filter->GetOutputPort());
@@ -906,11 +880,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddImmersedBoundaryCellPopulatio
         p_scaled_ctf->Build();
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_geom_filter->SetInput(p_voronoi_grid);
-        #else
-            p_geom_filter->SetInputData(p_voronoi_grid);
-        #endif
+        p_geom_filter->SetInputData(p_voronoi_grid);
 
         vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
         p_mapper->SetInputConnection(p_geom_filter->GetOutputPort());
@@ -1229,11 +1199,7 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddMeshBasedCellPopulationActor(
         }
 
         vtkSmartPointer<vtkGeometryFilter> p_mutable_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
-        #if VTK_MAJOR_VERSION <= 5
-        p_mutable_geom_filter->SetInput(p_mutable_grid);
-        #else
         p_mutable_geom_filter->SetInputData(p_mutable_grid);
-        #endif
 
         vtkSmartPointer<vtkFeatureEdges> p_extract_edges = vtkSmartPointer<vtkFeatureEdges>::New();
         p_extract_edges->SetInputConnection(p_mutable_geom_filter->GetOutputPort());
