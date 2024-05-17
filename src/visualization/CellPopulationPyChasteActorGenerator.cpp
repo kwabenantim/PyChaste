@@ -372,8 +372,8 @@ void CellPopulationPyChasteActorGenerator<DIM>::AddPottsBasedCellPopulationActor
                 p_local_threshold->ThresholdBetween(p_element_base_ids->GetTuple1(idx),
                                                     p_element_base_ids->GetTuple1(idx));
 #else
-                p_threshold->SetLowerThreshold(p_element_base_ids->GetTuple1(idx));
-                p_threshold->SetUpperThreshold(p_element_base_ids->GetTuple1(idx));
+                p_local_threshold->SetLowerThreshold(p_element_base_ids->GetTuple1(idx));
+                p_local_threshold->SetUpperThreshold(p_element_base_ids->GetTuple1(idx));
 #endif
 
                 p_local_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "Cell Base Id");
