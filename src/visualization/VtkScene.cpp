@@ -165,7 +165,7 @@ vtkSmartPointer<vtkUnsignedCharArray> VtkScene<DIM>::GetSceneAsCharBuffer()
     mpRenderWindow->SetOffScreenRendering(1);
     mpRenderWindow->Render();
     mWindowToImageFilter->Modified();
-    vtkSmartPointer<vtkPNGWriter> p_writer = vtkSmartPointer<vtkPNGWriter>::New();
+    auto p_writer = vtkSmartPointer<vtkPNGWriter>::New();
     p_writer->SetWriteToMemory(1);
     p_writer->SetInputConnection(mWindowToImageFilter->GetOutputPort());
     p_writer->Write();
@@ -199,7 +199,7 @@ void VtkScene<DIM>::ResetRenderer(unsigned time_step)
         mpRenderWindow->SetOffScreenRendering(1);
         mpRenderWindow->Render();
         mWindowToImageFilter->Modified();
-        vtkSmartPointer<vtkPNGWriter> p_writer = vtkSmartPointer<vtkPNGWriter>::New();
+        auto p_writer = vtkSmartPointer<vtkPNGWriter>::New();
         p_writer->SetWriteToMemory(1);
         p_writer->SetInputConnection(mWindowToImageFilter->GetOutputPort());
         if(!mOutputFilePath.empty())
