@@ -37,6 +37,23 @@
 # PyChaste needs the cell_based component (and its dependencies)
 find_package(Chaste COMPONENTS cell_based)
 
+# Do Chaste project preprocessing, which results in something like:
+#   add_custom_target(project_PyChaste)
+#   set(Chaste_project_PyChaste_SOURCE_DIR ...)
+#   set(Chaste_project_PyChaste_INCLUDE_DIRS ...)
+#   include_directories("${Chaste_THIRD_PARTY_INCLUDE_DIRS}")
+#   include_directories("${Chaste_project_PyChaste_INCLUDE_DIRS}")
+#   include_directories("${Chaste_INCLUDE_DIRS}")
+#   add_library(chaste_project_PyChaste ...)
+#   target_link_libraries(chaste_project_PyChaste ...)
+chaste_do_project(PyChaste)
+
+add_library(PyChaste_COMMON_DEPS INTERFACE)
+
+# PyChaste needs the Python3 development libraries
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+target_link_libraries(PyChaste_COMMON_DEPS INTERFACE Python3::Module)
+
 # PyChaste needs some additional VTK libraries
 if(VTK_MAJOR_VERSION LESS 7)
     find_package(VTK REQUIRED COMPONENTS
@@ -71,9 +88,9 @@ else()
         IOMovie
         RenderingAnnotation
         RenderingCore
-        RenderingFreeType
-        RenderingOpenGL2
-        WrappingPythonCore
+        # RenderingFreeType # needs Freetype::Freetype
+        # RenderingOpenGL2 # needs X11::X11 and GLEW::GLEW
+        WrappingPythonCore # needs Python3::Module
     )
 endif()
 
@@ -82,19 +99,9 @@ if (VTK_MAJOR_VERSION LESS 9)
     list(APPEND Chaste_project_PyChaste_INCLUDE_DIRS "${VTK_INCLUDE_DIRS}")
     list(APPEND Chaste_THIRD_PARTY_LIBRARIES "${VTK_LIBRARIES}")
 else()
-    target_link_libraries(Chaste_COMMON_DEPS INTERFACE ${VTK_LIBRARIES})
+    target_link_libraries(PyChaste_COMMON_DEPS INTERFACE VTK::WrappingPythonCore)
+    # target_link_libraries(PyChaste_COMMON_DEPS INTERFACE ${VTK_LIBRARIES})
 endif ()
-
-# Do Chaste project preprocessing, which results in something like:
-#   add_custom_target(project_PyChaste)
-#   set(Chaste_project_PyChaste_SOURCE_DIR ...)
-#   set(Chaste_project_PyChaste_INCLUDE_DIRS ...)
-#   include_directories("${Chaste_THIRD_PARTY_INCLUDE_DIRS}")
-#   include_directories("${Chaste_project_PyChaste_INCLUDE_DIRS}")
-#   include_directories("${Chaste_INCLUDE_DIRS}")
-#   add_library(chaste_project_PyChaste ...)
-#   target_link_libraries(chaste_project_PyChaste ...)
-chaste_do_project(PyChaste)
 
 #========================================
 # Compiler options
@@ -116,8 +123,7 @@ set(PYCHASTE_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/cell_based/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ode/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tutorial/
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/visualization/
-    ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/visualization/)
 
 # Non-wrapper code needs to be put in a separate shared library
 set(PYCHASTE_SHARED_LIB
@@ -183,44 +189,47 @@ set (PYCHASTE_PYTHON_MODULE_LOCATIONS
         ${CMAKE_CURRENT_BINARY_DIR}/python/chaste/
         ${CMAKE_CURRENT_BINARY_DIR}/python/chaste/tutorial/)
 
-# Create a shared library target for each module
-list(LENGTH PYCHASTE_PYTHON_MODULES max_module_idx)
-math(EXPR max_module_idx "${max_module_idx} - 1")
-set(module_prefix "_chaste_project_PyChaste_")
+# The module library name must be the same as the pybind11 module name
+# defined in the main wrapper e.g. `dynamic/wrappers/ode/ode.main.cpp`
+# defines a pybind11 module `_chaste_project_PyChaste_ode`. By convention,
+# the name starts with an underscore. The usual 'lib' prefix is disabled.
+set(PYCHASTE_PYTHON_MODULE_PREFIX "_chaste_project_PyChaste_")
 
-foreach(idx RANGE ${max_module_idx})
-    list(GET PYCHASTE_PYTHON_MODULES ${idx} module_name)
+# Create a shared library target for each module
+list(LENGTH PYCHASTE_PYTHON_MODULES max_idx)
+math(EXPR max_idx "${max_idx} - 1")
+
+foreach(idx RANGE ${max_idx})
+    list(GET PYCHASTE_PYTHON_MODULES ${idx} module)
     list(GET PYCHASTE_PYTHON_MODULE_LOCATIONS ${idx} module_dir)
 
     # Glob the module's wrapper code from the `dynamic` directory
-    file(GLOB module_sources ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/${module_name}/*.cpp)
+    file(GLOB module_sources ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/${module}/*.cpp)
 
-    # The module library name here must be the same as the pybind11 module name
-    # defined in the main wrapper e.g. `dynamic/wrappers/ode/ode.main.cpp`
-    # defines a pybind11 module `_chaste_project_PyChaste_ode`. By convention,
-    # the name starts with an underscore. The usual 'lib' prefix is disabled.
-    add_library(${module_prefix}${module_name} SHARED ${module_sources})
+    set(module_library_name ${PYCHASTE_PYTHON_MODULE_PREFIX}${module})
+    add_library(${module_library_name} SHARED ${module_sources})
 
-    set_target_properties(${module_prefix}${module_name}
+    set_target_properties(${module_library_name}
         PROPERTIES
             LIBRARY_OUTPUT_DIRECTORY ${module_dir}
             PREFIX "${PYTHON_MODULE_PREFIX}"
             SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
     # The order here is important - pybind11 and python come first
-    target_link_libraries(${module_prefix}${module_name}
+    target_link_libraries(${module_library_name} 
         pybind11::module
-        ${PYTHON3_LIBRARIES}
+        Python3::Module
         ${Chaste_THIRD_PARTY_LIBRARIES}
+        Chaste_COMMON_DEPS
+        PyChaste_COMMON_DEPS
         ${Chaste_LIBRARIES}
         ${PYCHASTE_SHARED_LIB})
 
-    add_dependencies(${module_prefix}${module_name} chaste_project_PyChaste)
+    add_dependencies(${module_library_name} chaste_project_PyChaste)
 endforeach()
 
 # Target for building all module shared libraries
 add_custom_target(project_PyChaste_Python)
-foreach(idx RANGE ${max_module_idx})
-    list(GET PYCHASTE_PYTHON_MODULES ${idx} module_name)
-    add_dependencies(project_PyChaste_Python ${module_prefix}${module_name})
+foreach(module IN LISTS PYCHASTE_PYTHON_MODULES)
+    add_dependencies(project_PyChaste_Python ${PYCHASTE_PYTHON_MODULE_PREFIX}${module})
 endforeach()
