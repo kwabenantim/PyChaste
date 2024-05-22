@@ -37,7 +37,7 @@
 # PyChaste needs the cell_based component (and its dependencies)
 find_package(Chaste COMPONENTS cell_based)
 
-# Do Chaste project preprocessing, which results in something like:
+# Do Chaste project preprocessing, which does something like:
 #   add_custom_target(project_PyChaste)
 #   set(Chaste_project_PyChaste_SOURCE_DIR ...)
 #   set(Chaste_project_PyChaste_INCLUDE_DIRS ...)
@@ -48,11 +48,9 @@ find_package(Chaste COMPONENTS cell_based)
 #   target_link_libraries(chaste_project_PyChaste ...)
 chaste_do_project(PyChaste)
 
-add_library(PyChaste_COMMON_DEPS INTERFACE)
-
 # PyChaste needs the Python3 development libraries
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
-target_link_libraries(PyChaste_COMMON_DEPS INTERFACE Python3::Module)
+target_link_libraries(Chaste_COMMON_DEPS INTERFACE Python3::Module Python3::Python)
 
 # PyChaste needs some additional VTK libraries
 if(VTK_MAJOR_VERSION LESS 7)
@@ -86,10 +84,11 @@ else()
         InteractionStyle
         IOImage
         IOMovie
+        IOOggTheora
         RenderingAnnotation
         RenderingCore
-        # RenderingFreeType # needs Freetype::Freetype
-        # RenderingOpenGL2 # needs X11::X11 and GLEW::GLEW
+        RenderingFreeType # needs Freetype::Freetype
+        RenderingOpenGL2 # needs X11::X11 and GLEW::GLEW
         WrappingPythonCore # needs Python3::Module
     )
 endif()
@@ -99,8 +98,7 @@ if (VTK_MAJOR_VERSION LESS 9)
     list(APPEND Chaste_project_PyChaste_INCLUDE_DIRS "${VTK_INCLUDE_DIRS}")
     list(APPEND Chaste_THIRD_PARTY_LIBRARIES "${VTK_LIBRARIES}")
 else()
-    target_link_libraries(PyChaste_COMMON_DEPS INTERFACE VTK::WrappingPythonCore)
-    # target_link_libraries(PyChaste_COMMON_DEPS INTERFACE ${VTK_LIBRARIES})
+    target_link_libraries(Chaste_COMMON_DEPS INTERFACE ${VTK_LIBRARIES})
 endif ()
 
 #========================================
@@ -218,10 +216,9 @@ foreach(idx RANGE ${max_idx})
     # The order here is important - pybind11 and python come first
     target_link_libraries(${module_library_name} 
         pybind11::module
-        Python3::Module
+        ${Python3_LIBRARIES}
         ${Chaste_THIRD_PARTY_LIBRARIES}
         Chaste_COMMON_DEPS
-        PyChaste_COMMON_DEPS
         ${Chaste_LIBRARIES}
         ${PYCHASTE_SHARED_LIB})
 
