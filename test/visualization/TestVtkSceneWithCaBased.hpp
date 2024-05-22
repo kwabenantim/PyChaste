@@ -130,16 +130,15 @@ public:
         cells_generator.GenerateBasic(cells, location_indices.size());
 
         // Create cell population
-        boost::shared_ptr<CaBasedCellPopulation<3> > p_cell_population =
-                boost::make_shared<CaBasedCellPopulation<3> >(*p_mesh, cells, location_indices);
+        auto p_cell_population = boost::make_shared<CaBasedCellPopulation<3> >(*p_mesh, cells, location_indices);
 
-        boost::shared_ptr<VtkScene<3> > p_scene = boost::make_shared<VtkScene<3> >();
+        auto p_scene = boost::make_shared<VtkScene<3> >();
         p_scene->SetCellPopulation(p_cell_population);
         p_scene->SetSaveAsImages(true);
         p_scene->GetCellPopulationActorGenerator()->SetShowPottsMeshEdges(true);
         p_scene->SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath()+"/cell_population");
 
-        boost::shared_ptr<VtkSceneModifier<3> > p_scene_modifier = boost::make_shared<VtkSceneModifier<3> >();
+        auto p_scene_modifier = boost::make_shared<VtkSceneModifier<3> >();
         p_scene_modifier->SetVtkScene(p_scene);
 
         p_scene->Start();

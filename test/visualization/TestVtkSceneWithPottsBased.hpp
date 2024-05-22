@@ -87,8 +87,7 @@ public:
         CellsGenerator<UniformCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements(), p_transit_type);
 
-        boost::shared_ptr<PottsBasedCellPopulation<2> >  p_cell_population =
-                boost::shared_ptr<PottsBasedCellPopulation<2> >(new PottsBasedCellPopulation<2> (*p_mesh, cells));
+        auto  p_cell_population = boost::make_shared<PottsBasedCellPopulation<2> >(*p_mesh, cells);
         p_cell_population->SetTemperature(0.1);
         p_cell_population->SetNumSweepsPerTimestep(1);
 
@@ -98,14 +97,14 @@ public:
         simulator.SetDt(0.1);
         simulator.SetSamplingTimestepMultiple(10);
 
-        boost::shared_ptr<VtkScene<2> > p_scene = boost::shared_ptr<VtkScene<2> >(new VtkScene<2>);
+        auto p_scene = boost::make_shared<VtkScene<2> >();
         p_scene->SetCellPopulation(p_cell_population);
         p_scene->SetIsInteractive(true);
         p_scene->SetSaveAsImages(false);
         p_scene->GetCellPopulationActorGenerator()->SetShowPottsMeshEdges(true);
         p_scene->SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath()+"/cell_population");
 
-        boost::shared_ptr<VtkSceneModifier<2> > p_scene_modifier = boost::shared_ptr<VtkSceneModifier<2> >(new VtkSceneModifier<2>);
+        auto p_scene_modifier = boost::make_shared<VtkSceneModifier<2> >();
         p_scene_modifier->SetVtkScene(p_scene);
         p_scene_modifier->SetUpdateFrequency(10);
         p_scene->Start();
@@ -132,8 +131,7 @@ public:
         CellsGenerator<UniformCellCycleModel, 3> cells_generator;
         cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements(), p_transit_type);
 
-        boost::shared_ptr<PottsBasedCellPopulation<3> >  p_cell_population =
-                boost::shared_ptr<PottsBasedCellPopulation<3> >(new PottsBasedCellPopulation<3> (*p_mesh, cells));
+        auto p_cell_population = boost::make_shared<PottsBasedCellPopulation<3> >(*p_mesh, cells);
         p_cell_population->SetTemperature(0.1);
         p_cell_population->SetNumSweepsPerTimestep(1);
 
@@ -143,7 +141,7 @@ public:
         simulator.SetDt(0.1);
         simulator.SetSamplingTimestepMultiple(100);
 
-        boost::shared_ptr<VtkScene<3> > p_scene = boost::shared_ptr<VtkScene<3> >(new VtkScene<3>);
+        auto p_scene = boost::make_shared<VtkScene<3> >();
         p_scene->SetCellPopulation(p_cell_population);
         p_scene->SetIsInteractive(true);
         p_scene->SetSaveAsImages(false);
@@ -151,7 +149,7 @@ public:
         p_scene->GetCellPopulationActorGenerator()->SetShowPottsMeshOutlines(true);
         p_scene->SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath()+"/cell_population");
 
-        boost::shared_ptr<VtkSceneModifier<3> > p_scene_modifier = boost::shared_ptr<VtkSceneModifier<3> >(new VtkSceneModifier<3>);
+        auto p_scene_modifier = boost::make_shared<VtkSceneModifier<3> >();
         p_scene_modifier->SetVtkScene(p_scene);
         p_scene->Start();
 
